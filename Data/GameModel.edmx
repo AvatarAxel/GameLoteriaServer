@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GameLoteriaDataBasesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="friendList">
+          <Key>
+            <PropertyRef Name="idFriendList" />
+          </Key>
+          <Property Name="idFriendList" Type="int" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="225" Nullable="false" />
+        </EntityType>
+        <EntityType Name="player">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="nvarchar" MaxLength="225" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="birthday" Type="date" Nullable="false" />
+          <Property Name="coins" Type="int" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_friendList_email">
+          <End Role="player" Type="Self.player" Multiplicity="1" />
+          <End Role="friendList" Type="Self.friendList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="player">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="friendList">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GameLoteriaDataBasesModelStoreContainer">
+          <EntitySet Name="friendList" EntityType="Self.friendList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="player" EntityType="Self.player" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_friendList_email" Association="Self.FK_friendList_email">
+            <End Role="player" EntitySet="player" />
+            <End Role="friendList" EntitySet="friendList" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GameLoteriaDataBasesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="friendList">
+          <Key>
+            <PropertyRef Name="idFriendList" />
+          </Key>
+          <Property Name="idFriendList" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="player" Relationship="Self.FK_friendList_email" FromRole="friendList" ToRole="player" />
+        </EntityType>
+        <EntityType Name="player">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="coins" Type="Int32" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="friendList" Relationship="Self.FK_friendList_email" FromRole="player" ToRole="friendList" />
+        </EntityType>
+        <Association Name="FK_friendList_email">
+          <End Role="player" Type="Self.player" Multiplicity="1" />
+          <End Role="friendList" Type="Self.friendList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="player">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="friendList">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GameLoteriaDataBasesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="friendList" EntityType="Self.friendList" />
+          <EntitySet Name="player" EntityType="Self.player" />
+          <AssociationSet Name="FK_friendList_email" Association="Self.FK_friendList_email">
+            <End Role="player" EntitySet="player" />
+            <End Role="friendList" EntitySet="friendList" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GameLoteriaDataBasesModelStoreContainer" CdmEntityContainer="GameLoteriaDataBasesEntities">
+          <EntitySetMapping Name="friendList">
+            <EntityTypeMapping TypeName="GameLoteriaDataBasesModel.friendList">
+              <MappingFragment StoreEntitySet="friendList">
+                <ScalarProperty Name="idFriendList" ColumnName="idFriendList" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="player">
+            <EntityTypeMapping TypeName="GameLoteriaDataBasesModel.player">
+              <MappingFragment StoreEntitySet="player">
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="coins" ColumnName="coins" />
+                <ScalarProperty Name="username" ColumnName="username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
