@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Comunication;
 using System.Xml.Linq;
 using Logic;
+using System.Threading;
+using Microsoft.Win32;
 
 namespace Comunication
 {
@@ -17,6 +19,13 @@ namespace Comunication
         {
             Authentication authentication = new Authentication();
             bool status = authentication.IsAuthenticated(name, password);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().NombreEjemplo(status);
+        }
+
+        public void RegistrerUserBD(PlayerDTO player)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.RegisterUser(player);
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().NombreEjemplo(status);
         }
 

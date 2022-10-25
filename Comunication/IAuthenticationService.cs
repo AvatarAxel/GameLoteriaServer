@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text; 
 using System.Threading.Tasks;
@@ -14,8 +16,9 @@ namespace Comunication
         void IsAuthenticated(String name, String password);
 
         [OperationContract(IsOneWay = true)]
+        void RegistrerUserBD(PlayerDTO player);
+        [OperationContract(IsOneWay = true)]
         void ReponseAuthenticated(string username, string email, string password01);
-
     }
 
     //Callback repuesta al cliente de forma asincrona, todo lo callback es void

@@ -11,7 +11,9 @@ namespace Data
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Runtime.Serialization;
+
+    [DataContract]
     public partial class player
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,11 +21,15 @@ namespace Data
         {
             this.friendList = new HashSet<friendList>();
         }
-    
+        [DataMember]
         public string email { get; set; }
+        [DataMember]
         public string password { get; set; }
+        [DataMember]
         public System.DateTime birthday { get; set; }
+        [DataMember]
         public int coins { get; set; }
+        [DataMember]
         public string username { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
