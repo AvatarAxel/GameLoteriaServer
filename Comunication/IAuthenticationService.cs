@@ -12,15 +12,19 @@ namespace Comunication
     {
         [OperationContract(IsOneWay = true)]
         void IsAuthenticated(String name, String password);
+
+        [OperationContract(IsOneWay = true)]
+        void ReponseAuthenticated(string username, string email, string password01);
+
     }
 
     //Callback repuesta al cliente de forma asincrona, todo lo callback es void
 
-    [ServiceContract(CallbackContract = typeof(IAuthenticationServiceCallBack))]
+    [ServiceContract]
     public interface IAuthenticationServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
-        void ReponseAuthenticated(String username, String email, String password01);
+        void NombreEjemplo(bool status);
     }
 }
 

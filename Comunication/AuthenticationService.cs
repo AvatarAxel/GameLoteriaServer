@@ -1,5 +1,4 @@
 ﻿using System;
-//using Logic;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -7,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Comunication;
 using System.Xml.Linq;
+using Logic;
 
 namespace Comunication
 {
@@ -17,7 +17,7 @@ namespace Comunication
         {
             Authentication authentication = new Authentication();
             bool status = authentication.IsAuthenticated(name, password);
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ReponseAuthenticated(status);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().NombreEjemplo(status);
         }
 
         public void ReponseAuthenticated(string username, string email, string password01)
@@ -25,9 +25,10 @@ namespace Comunication
             Authentication authentication = new Authentication();
             bool status = authentication.ReponseAuthenticated(username, email, password01);
             //LLama al cliente y mediante el metodo CallBack te mando la inf
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ReponseAuthenticated(status);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().NombreEjemplo(status);
         }
-    }
 
+
+    }
 
 }
