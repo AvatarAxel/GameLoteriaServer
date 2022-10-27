@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Runtime.Remoting.Contexts;
+
 
 namespace Logic
 {
@@ -20,6 +23,17 @@ namespace Logic
                 {
                     status = true;
                 }
+            }
+            return status;
+        }
+
+        public bool AuthenticationLogin(string username, string password)
+        {
+            Boolean status = false;
+            using (var context = new GameLoteriaDataBasesEntities())
+            {
+                var players = (from Player in context.player where Player.username == username && Player.password == password select Player).Count();
+                status = players > 0;
             }
             return status;
         }

@@ -13,21 +13,17 @@ namespace Comunication
     public interface IAuthenticationService
     {
         [OperationContract(IsOneWay = true)]
-        void IsAuthenticated(String name, String password);
+        void AuthenticationLogin(String name, String password);
 
         [OperationContract(IsOneWay = true)]
         void RegistrerUserBD(PlayerDTO player);
-        [OperationContract(IsOneWay = true)]
-        void ReponseAuthenticated(string username, string email, string password01);
     }
-
-    //Callback repuesta al cliente de forma asincrona, todo lo callback es void
 
     [ServiceContract]
     public interface IAuthenticationServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
-        void NombreEjemplo(bool status);
+        void ResponseAuthenticated(bool status);
     }
 }
 
