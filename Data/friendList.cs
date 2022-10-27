@@ -11,14 +11,10 @@ namespace Data
 {
     using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
-    [DataContract]
+    
     public partial class friendList
     {
-        [DataMember]
         public int idFriendList { get; set; }
-        [DataMember]
         public string email { get; set; }
     
         public virtual player player { get; set; }

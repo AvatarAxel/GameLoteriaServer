@@ -60,7 +60,7 @@
             <PropertyRef Name="email" />
           </Key>
           <Property Name="email" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="70" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="birthday" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="coins" Type="Int32" Nullable="false" />
           <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
