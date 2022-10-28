@@ -17,7 +17,7 @@ namespace Logic
             bool status = false;
             using (var context = new GameLoteriaDataBasesEntities())
             {
-                var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.username, password = player.Password, coins = 500, birthday = player.Birthday });
+                var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
                 var resultado = context.SaveChanges();
                 if (resultado > 0)
                 {
@@ -29,6 +29,7 @@ namespace Logic
 
         public bool AuthenticationLogin(string username, string password)
         {
+            
             Boolean status = false;
             using (var context = new GameLoteriaDataBasesEntities())
             {
@@ -39,3 +40,5 @@ namespace Logic
         }
     }
 }
+
+

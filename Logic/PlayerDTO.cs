@@ -6,7 +6,7 @@ namespace Logic
     public class PlayerDTO
     {
         [DataMember]
-        public string username { get; set; }
+        public string Username { get; set; }
         [DataMember]
         public string Password { get; set; }
         [DataMember]
