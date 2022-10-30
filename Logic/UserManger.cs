@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Runtime.Remoting.Contexts;
+using System.Runtime.ConstrainedExecution;
 
 
 namespace Logic
@@ -37,6 +38,20 @@ namespace Logic
                 status = players > 0;
             }
             return status;
+        }
+
+        public string ReceiveEmail(string EmailPlayers)
+        {
+            var random = new Random();
+            var value = random.Next(0, 10000);
+
+            string verificationCode = value.ToString();
+
+            EmailStructure objLogic = new EmailStructure();
+            string body = "Hello player I enclose your verification code " + verificationCode;
+            objLogic.sendMail(EmailPlayers, " Verification Code ", body);
+
+            return verificationCode;
         }
     }
 }

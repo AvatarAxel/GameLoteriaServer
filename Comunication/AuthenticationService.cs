@@ -28,6 +28,13 @@ namespace Comunication
             bool status = userManager.RegisterUser(player);
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(status);
         }
+
+        public void ValidationEmail(string email)
+        {
+            UserManager userManager = new UserManager();
+            string verificationCode = userManager.ReceiveEmail(email);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseEmail(verificationCode);
+        }
     }
 
 }

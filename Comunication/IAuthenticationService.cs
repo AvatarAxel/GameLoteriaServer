@@ -17,13 +17,21 @@ namespace Comunication
 
         [OperationContract(IsOneWay = true)]
         void RegistrerUserBD(PlayerDTO player);
+
+        [OperationContract(IsOneWay = true)]
+        void ValidationEmail(String email);
     }
 
+    
     [ServiceContract]
     public interface IAuthenticationServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
         void ResponseAuthenticated(bool status);
+
+        [OperationContract(IsOneWay = true)]
+        void ResponseEmail(string verificationCode);
+
     }
 }
 
