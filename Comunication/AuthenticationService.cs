@@ -29,5 +29,36 @@ namespace Comunication
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(status);
         }
     }
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.Single)]
+    public partial class Chat : IChat
+    {
+        List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
+        public void JoinChat(string username)
+        {
+            PlayerDTO player = new PlayerDTO()
+            {
+                Username = username,
+            };
+            var connection = OperationContext.Current;
+            player.Connection = connection;
+            playerDTOs.Add(player);
+        }
 
+        public void SendMessage(string message, string userChat)
+        {
+            foreach (var user in playerDTOs)
+            {
+                var connetion = user.Connection.GetCallbackChannel<IChatServiceCallBack>();
+                connetion.ReciveMessage(userChat, message);
+            }
+        }
+        public void ExitChat(string userName)
+        {
+            var player = playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
+            if (player != null)
+            {
+                playerDTOs.Remove(player);
+            }
+        }
+    }
 }
