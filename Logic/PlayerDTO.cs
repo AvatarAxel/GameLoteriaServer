@@ -16,7 +16,6 @@ namespace Logic
         public System.DateTime Birthday { get; set; }
         [DataMember]
         public int Coin { get; set; }
-        [DataMember]
         public OperationContext Connection { get; set; }
     }
 }

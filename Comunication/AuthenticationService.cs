@@ -12,7 +12,7 @@ using Microsoft.Win32;
 
 namespace Comunication
 {
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.Single)]
     public partial class AuthenticationService : IAuthenticationService
     {
         public void AuthenticationLogin(string name, string password)
@@ -29,8 +29,9 @@ namespace Comunication
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(status);
         }
     }
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.Single)]
-    public partial class Chat : IChat
+
+    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.Single)]
+    public partial class AuthenticationService : IChatService
     {
         List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
         public void JoinChat(string username)
@@ -50,6 +51,7 @@ namespace Comunication
             {
                 var connetion = user.Connection.GetCallbackChannel<IChatServiceCallBack>();
                 connetion.ReciveMessage(userChat, message);
+                continue;
             }
         }
         public void ExitChat(string userName)

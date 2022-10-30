@@ -25,23 +25,5 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void ResponseAuthenticated(bool status);
     }
-
-    [ServiceContract(CallbackContract = typeof(IChatServiceCallBack))]
-    public interface IChat
-    {
-        [OperationContract(IsOneWay = true)]
-        void JoinChat(string username);
-        [OperationContract(IsOneWay = true)]
-        void SendMessage(string message, string userChat);
-        [OperationContract(IsOneWay = true)]
-        void ExitChat(string userName);
-    }
-
-    [ServiceContract]
-    public interface IChatServiceCallBack
-    {
-        [OperationContract(IsOneWay = true)]
-        void ReciveMessage(string player, string message);
-    }
 }
 
