@@ -30,7 +30,6 @@ namespace Comunication
         }
     }
 
-    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.Single)]
     public partial class AuthenticationService : IChatService
     {
         List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
@@ -47,11 +46,17 @@ namespace Comunication
 
         public void SendMessage(string message, string userChat)
         {
-            foreach (var user in playerDTOs)
+            for (int i = 0; i < playerDTOs.Count; i++) 
             {
-                var connetion = user.Connection.GetCallbackChannel<IChatServiceCallBack>();
-                connetion.ReciveMessage(userChat, message);
-                continue;
+                try
+                {                     
+                    var connetion = playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>();
+                    connetion.ReciveMessage(userChat, message);
+                }
+                catch (CommunicationObjectAbortedException)
+                {
+                    playerDTOs.Remove(playerDTOs[i]);
+                }
             }
         }
         public void ExitChat(string userName)
