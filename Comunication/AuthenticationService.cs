@@ -18,15 +18,15 @@ namespace Comunication
         public void AuthenticationLogin(string name, string password)
         {
             UserManager authentication = new UserManager();
-            bool status = authentication.AuthenticationLogin(name, password);
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(status);
+            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(playerDTO);
         }
 
         public void RegistrerUserBD(PlayerDTO player)
         {
             UserManager userManager = new UserManager();
             bool status = userManager.RegisterUser(player);
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(status);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseRegister(status);
         }
 
         public void ValidationEmail(string email)

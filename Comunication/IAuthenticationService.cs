@@ -27,11 +27,12 @@ namespace Comunication
     public interface IAuthenticationServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
-        void ResponseAuthenticated(bool status);
+        void ResponseAuthenticated(PlayerDTO playerDTO);
 
         [OperationContract(IsOneWay = true)]
         void ResponseEmail(string verificationCode);
-
+        [OperationContract(IsOneWay = true)]
+        void ResponseRegister(bool status);
     }
 }
 
