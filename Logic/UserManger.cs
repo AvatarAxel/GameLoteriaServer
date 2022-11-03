@@ -30,7 +30,6 @@ namespace Logic
 
         public bool AuthenticationLogin(string username, string password)
         {
-            
             Boolean status = false;
             using (var context = new GameLoteriaDataBasesEntities())
             {

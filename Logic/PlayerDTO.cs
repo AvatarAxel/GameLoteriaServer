@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.ServiceModel;
 
 namespace Logic
 {
@@ -15,5 +16,6 @@ namespace Logic
         public System.DateTime Birthday { get; set; }
         [DataMember]
         public int Coin { get; set; }
+        public OperationContext Connection { get; set; }
     }
 }

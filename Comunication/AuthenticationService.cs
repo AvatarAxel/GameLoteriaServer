@@ -12,7 +12,7 @@ using Microsoft.Win32;
 
 namespace Comunication
 {
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.Single)]
     public partial class AuthenticationService : IAuthenticationService
     {
         public void AuthenticationLogin(string name, string password)
@@ -37,4 +37,42 @@ namespace Comunication
         }
     }
 
+    public partial class AuthenticationService : IChatService
+    {
+        List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
+        public void JoinChat(string username)
+        {
+            PlayerDTO player = new PlayerDTO()
+            {
+                Username = username,
+            };
+            var connection = OperationContext.Current;
+            player.Connection = connection;
+            playerDTOs.Add(player);
+        }
+
+        public void SendMessage(string message, string userChat)
+        {
+            for (int i = 0; i < playerDTOs.Count; i++) 
+            {
+                try
+                {                     
+                    var connetion = playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>();
+                    connetion.ReciveMessage(userChat, message);
+                }
+                catch (CommunicationObjectAbortedException)
+                {
+                    playerDTOs.Remove(playerDTOs[i]);
+                }
+            }
+        }
+        public void ExitChat(string userName)
+        {
+            var player = playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
+            if (player != null)
+            {
+                playerDTOs.Remove(player);
+            }
+        }
+    }
 }
