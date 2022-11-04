@@ -52,7 +52,19 @@ namespace Logic
 
             return verificationCode;
         }
-        
+
+        public bool ChangePassword(string email, string password)
+         {
+             bool status = true;
+             using (var context = new GameLoteriaDataBasesEntities())
+             {
+                var player = context.player.Where(x => x.email == email).FirstOrDefault();
+                player.password = password;
+                context.SaveChanges();
+             }
+            return status;
+         }
+
     }
 }
 
