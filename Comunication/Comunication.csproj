@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="IAuthenticationService.cs" />
+    <Compile Include="IChangePassword.cs" />
     <Compile Include="IChatService.cs" />
     <Compile Include="IService1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

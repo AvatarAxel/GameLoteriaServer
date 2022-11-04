@@ -75,4 +75,13 @@ namespace Comunication
             }
         }
     }
+    public partial class AuthenticationService : IChangePasswordService
+    {
+        public void ChangePassword(string email, string password)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.ChangePassword(email, password);
+            OperationContext.Current.GetCallbackChannel<IChangePasswordServiceCallBack>().ResponseChangePassword(status);
+        }
+    }
 }
