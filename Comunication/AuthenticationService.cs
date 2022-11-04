@@ -18,11 +18,12 @@ namespace Comunication
         public void AuthenticationLogin(string name, string password)
         {
             UserManager authentication = new UserManager();
-            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password);
+            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password); //InvalidOperationException:
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(playerDTO);
         }
     }
 
+  
     public partial class AuthenticationService : IChatService
     {
         List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
