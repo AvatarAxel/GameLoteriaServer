@@ -53,7 +53,7 @@ namespace Logic
                 
                 if(players.Count() > 0)
                 {
-                    playerDTO.Username = players.First().username; //System.InvalidOperationException
+                    playerDTO.Username = players.First().username; 
                     playerDTO.Email = players.First().email;
                     playerDTO.IsActive = true;
                     playerDTO.Coin = players.First().coins;
