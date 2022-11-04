@@ -14,12 +14,6 @@ namespace Comunication
     {
         [OperationContract(IsOneWay = true)]
         void AuthenticationLogin(String name, String password);
-
-        [OperationContract(IsOneWay = true)]
-        void RegistrerUserBD(PlayerDTO player);
-
-        [OperationContract(IsOneWay = true)]
-        void ValidationEmail(String email);
     }
 
     
@@ -28,11 +22,6 @@ namespace Comunication
     {
         [OperationContract(IsOneWay = true)]
         void ResponseAuthenticated(PlayerDTO playerDTO);
-
-        [OperationContract(IsOneWay = true)]
-        void ResponseEmail(string verificationCode);
-        [OperationContract(IsOneWay = true)]
-        void ResponseRegister(bool status);
     }
 }
 

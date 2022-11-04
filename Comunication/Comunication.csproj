@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="IAuthenticationService.cs" />
-    <Compile Include="IChangePassword.cs" />
+    <Compile Include="IChangePasswordService.cs" />
     <Compile Include="IChatService.cs" />
+    <Compile Include="IEmailService.cs" />
+    <Compile Include="IUserRegistrationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

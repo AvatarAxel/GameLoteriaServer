@@ -21,20 +21,6 @@ namespace Comunication
             PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password);
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(playerDTO);
         }
-
-        public void RegistrerUserBD(PlayerDTO player)
-        {
-            UserManager userManager = new UserManager();
-            bool status = userManager.RegisterUser(player);
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseRegister(status);
-        }
-
-        public void ValidationEmail(string email)
-        {
-            UserManager userManager = new UserManager();
-            string verificationCode = userManager.ReceiveEmail(email);
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseEmail(verificationCode);
-        }
     }
 
     public partial class AuthenticationService : IChatService
@@ -82,6 +68,24 @@ namespace Comunication
             UserManager userManager = new UserManager();
             bool status = userManager.ChangePassword(email, password);
             OperationContext.Current.GetCallbackChannel<IChangePasswordServiceCallBack>().ResponseChangePassword(status);
+        }
+    }
+    public partial class AuthenticationService : IEmailService
+    {
+        public void ValidationEmail(string email)
+        {
+            UserManager userManager = new UserManager();
+            string verificationCode = userManager.ReceiveEmail(email);
+            OperationContext.Current.GetCallbackChannel<IEmailServiceCallBack>().ResponseEmail(verificationCode);
+        }
+    }
+    public partial class AuthenticationService : IUserRegistrationService 
+    {
+        public void RegistrerUserBD(PlayerDTO player)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.RegisterUser(player);
+            OperationContext.Current.GetCallbackChannel<IUserRegistrationServiceCallBack>().ResponseRegister(status);
         }
     }
 }
