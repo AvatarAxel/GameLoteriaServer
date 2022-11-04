@@ -28,15 +28,21 @@ namespace Logic
             return status;
         }
 
-        public bool AuthenticationLogin(string username, string password)
+        public PlayerDTO AuthenticationLogin(string username, string password)
         {
-            Boolean status = false;
+            PlayerDTO playerDTO = new PlayerDTO()
+            {
+                IsActive = false
+            };
             using (var context = new GameLoteriaDataBasesEntities())
             {
-                var players = (from Player in context.player where Player.username == username && Player.password == password select Player).Count();
-                status = players > 0;
+                var players = (from Player in context.player where Player.username == username && Player.password == password select Player);
+                playerDTO.Username = players.First().username;
+                playerDTO.Email  = players.First().email;
+                playerDTO.IsActive = true;
+                playerDTO.Coin = players.First().coins;
             }
-            return status;
+            return playerDTO;
         }
 
         public string ReceiveEmail(string EmailPlayers)
