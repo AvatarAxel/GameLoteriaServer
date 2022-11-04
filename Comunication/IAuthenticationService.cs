@@ -20,6 +20,9 @@ namespace Comunication
 
         [OperationContract(IsOneWay = true)]
         void ValidationEmail(String email);
+
+        [OperationContract(IsOneWay = true)]
+        void UserExist(string username, string email);
     }
 
     
@@ -31,6 +34,7 @@ namespace Comunication
 
         [OperationContract(IsOneWay = true)]
         void ResponseEmail(string verificationCode);
+
         [OperationContract(IsOneWay = true)]
         void ResponseRegister(bool status);
     }

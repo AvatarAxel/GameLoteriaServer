@@ -18,16 +18,29 @@ namespace Logic
             bool status = false;
             using (var context = new GameLoteriaDataBasesEntities())
             {
-                var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
-                var resultado = context.SaveChanges();
-                if (resultado > 0)
-                {
-                    status = true;
+                if (!UserExist(player.Username, player.Email)) {
+                    var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
+                    var resultado = context.SaveChanges();
+                    if (resultado > 0)
+                    {
+                        status = true;
+                    }
                 }
             }
             return status;
         }
-
+        public bool UserExist(string username, string email)
+        {
+            using (var context = new GameLoteriaDataBasesEntities())
+            {
+                var result = context.player.Where(x => x.username == username);
+                if (result.Count() > 0) 
+                {
+                    return true;
+                }
+                return false;
+            };
+        }
         public PlayerDTO AuthenticationLogin(string username, string password)
         {
             PlayerDTO playerDTO = new PlayerDTO()
@@ -37,10 +50,15 @@ namespace Logic
             using (var context = new GameLoteriaDataBasesEntities())
             {
                 var players = (from Player in context.player where Player.username == username && Player.password == password select Player);
-                playerDTO.Username = players.First().username;
-                playerDTO.Email  = players.First().email;
-                playerDTO.IsActive = true;
-                playerDTO.Coin = players.First().coins;
+                
+                if(players.Count() > 0)
+                {
+                    playerDTO.Username = players.First().username; //System.InvalidOperationException
+                    playerDTO.Email = players.First().email;
+                    playerDTO.IsActive = true;
+                    playerDTO.Coin = players.First().coins;
+                }
+              
             }
             return playerDTO;
         }

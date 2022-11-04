@@ -18,7 +18,7 @@ namespace Comunication
         public void AuthenticationLogin(string name, string password)
         {
             UserManager authentication = new UserManager();
-            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password);
+            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password); //InvalidOperationException:
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(playerDTO);
         }
 
@@ -35,8 +35,16 @@ namespace Comunication
             string verificationCode = userManager.ReceiveEmail(email);
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseEmail(verificationCode);
         }
+
+        public void UserExist(string username, string email)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.UserExist(username, email);
+            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseRegister(status);
+        }
     }
 
+  
     public partial class AuthenticationService : IChatService
     {
         List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
