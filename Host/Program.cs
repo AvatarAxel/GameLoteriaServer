@@ -11,7 +11,7 @@ namespace Host
     {
         static void Main(string[] args)
         {
-            using (ServiceHost host = new ServiceHost(typeof(Comunication.AuthenticationService)))
+            using (ServiceHost host = new ServiceHost(typeof(Comunication.ServicesExposed)))
             {
                 host.Open();
                 Console.WriteLine("Server is running");

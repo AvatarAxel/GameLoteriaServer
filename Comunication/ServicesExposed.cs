@@ -9,11 +9,13 @@ using System.Xml.Linq;
 using Logic;
 using System.Threading;
 using Microsoft.Win32;
+using System.ServiceModel.Channels;
+using System.Security;
 
 namespace Comunication
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.Single)]
-    public partial class AuthenticationService : IAuthenticationService
+    public partial class ServicesExposed : IAuthenticationService
     {
         public void AuthenticationLogin(string name, string password)
         {
@@ -24,7 +26,7 @@ namespace Comunication
     }
 
   
-    public partial class AuthenticationService : IChatService
+    public partial class ServicesExposed : IChatService
     {
         List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
         public void JoinChat(string username)
@@ -62,7 +64,7 @@ namespace Comunication
             }
         }
     }
-    public partial class AuthenticationService : IChangePasswordService
+    public partial class ServicesExposed : IChangePasswordService
     {
         public void ChangePassword(string email, string password)
         {
@@ -71,7 +73,7 @@ namespace Comunication
             OperationContext.Current.GetCallbackChannel<IChangePasswordServiceCallBack>().ResponseChangePassword(status);
         }
     }
-    public partial class AuthenticationService : IEmailService
+    public partial class ServicesExposed : IEmailService
     {
         public void ValidationEmail(string email)
         {
@@ -80,13 +82,78 @@ namespace Comunication
             OperationContext.Current.GetCallbackChannel<IEmailServiceCallBack>().ResponseEmail(verificationCode);
         }
     }
-    public partial class AuthenticationService : IUserRegistrationService 
+    public partial class ServicesExposed : IUserRegistrationService 
     {
         public void RegistrerUserBD(PlayerDTO player)
         {
             UserManager userManager = new UserManager();
             bool status = userManager.RegisterUser(player);
             OperationContext.Current.GetCallbackChannel<IUserRegistrationServiceCallBack>().ResponseRegister(status);
+        }
+    }
+    public partial class ServicesExposed : IJoinGameService
+    {
+        List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
+
+
+        public void CreateGame(string verificationCode)
+        {
+            GameRoundDTO gameRoundDTO = new GameRoundDTO() 
+            { 
+                VerificationCode = verificationCode
+            };
+            gameRoundDTOs.Add(gameRoundDTO);
+        }
+
+        public void ExitGame(string userName, string verificationCode)
+        {
+            var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.Lobby.FirstOrDefault(iteration => iteration.Username == userName);
+                if (player != null)
+                {
+                    lobby.Lobby.Remove(player);
+                }
+            }
+        }
+
+        public void JoinGame(string username, string verificationCode)
+        {
+            PlayerDTO player = new PlayerDTO()
+            {
+                Username = username,
+            };
+            bool status = false;
+            var newConnection = OperationContext.Current;
+            player.Connection = newConnection;
+            var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                lobby.Lobby.Add(player);
+                status = true;
+            }
+            status = lobby.VerificationCode.Equals(verificationCode);
+            var connetion = player.Connection.GetCallbackChannel<IJoinGameServiceCallBack>();
+            connetion.CodeExist(status);
+        }
+
+        public void SendWinner(string username, string verificationCode)
+        {
+            var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.Lobby.FirstOrDefault(iteration => iteration.Username == username);
+                try
+                {
+                    var conection = player.Connection.GetCallbackChannel<IJoinGameServiceCallBack>();
+                    conection.ReciveWinner(username);
+                }
+                catch (CommunicationObjectAbortedException)
+                {
+                    lobby.Lobby.Remove(player);                
+                }
+            }
         }
     }
 }

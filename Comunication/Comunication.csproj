@@ -44,11 +44,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthenticationService.cs" />
+    <Compile Include="ServicesExposed.cs" />
     <Compile Include="IAuthenticationService.cs" />
     <Compile Include="IChangePasswordService.cs" />
     <Compile Include="IChatService.cs" />
     <Compile Include="IEmailService.cs" />
+    <Compile Include="IJoinGame.cs" />
     <Compile Include="IUserRegistrationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
