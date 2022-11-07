@@ -9,6 +9,6 @@ namespace Logic
     public class GameRoundDTO
     {
         public string VerificationCode { get; set; }
-        public List<PlayerDTO> Lobby { get; set; }
+        public List<PlayerDTO> playerDTOs { get; set; }
     }
 }

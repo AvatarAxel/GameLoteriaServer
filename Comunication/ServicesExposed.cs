@@ -98,9 +98,12 @@ namespace Comunication
 
         public void CreateGame(string verificationCode)
         {
-            GameRoundDTO gameRoundDTO = new GameRoundDTO() 
-            { 
-                VerificationCode = verificationCode
+            List<PlayerDTO> ListPlayerDTOs = new List<PlayerDTO>();
+            GameRoundDTO gameRoundDTO = new GameRoundDTO()
+            {
+                VerificationCode = verificationCode,
+                playerDTOs = ListPlayerDTOs
+
             };
             gameRoundDTOs.Add(gameRoundDTO);
         }
@@ -110,32 +113,30 @@ namespace Comunication
             var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
             {
-                var player = lobby.Lobby.FirstOrDefault(iteration => iteration.Username == userName);
+                var player = lobby.playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
                 if (player != null)
                 {
-                    lobby.Lobby.Remove(player);
+                    lobby.playerDTOs.Remove(player);
                 }
             }
         }
 
         public void JoinGame(string username, string verificationCode)
         {
-            PlayerDTO player = new PlayerDTO()
-            {
-                Username = username,
-            };
             bool status = false;
             var newConnection = OperationContext.Current;
-            player.Connection = newConnection;
             var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
             {
-                lobby.Lobby.Add(player);
+                PlayerDTO player = new PlayerDTO()
+                {
+                    Username = username,
+                };
+                player.Connection = newConnection;
+                lobby.playerDTOs.Add(player);
                 status = true;
             }
-            status = lobby.VerificationCode.Equals(verificationCode);
-            var connetion = player.Connection.GetCallbackChannel<IJoinGameServiceCallBack>();
-            connetion.CodeExist(status);
+            newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().CodeExist(status);
         }
 
         public void SendWinner(string username, string verificationCode)
@@ -143,7 +144,7 @@ namespace Comunication
             var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
             {
-                var player = lobby.Lobby.FirstOrDefault(iteration => iteration.Username == username);
+                var player = lobby.playerDTOs.FirstOrDefault(iteration => iteration.Username == username);
                 try
                 {
                     var conection = player.Connection.GetCallbackChannel<IJoinGameServiceCallBack>();
@@ -151,7 +152,7 @@ namespace Comunication
                 }
                 catch (CommunicationObjectAbortedException)
                 {
-                    lobby.Lobby.Remove(player);                
+                    lobby.playerDTOs.Remove(player);                
                 }
             }
         }
