@@ -94,8 +94,6 @@ namespace Comunication
     public partial class ServicesExposed : IJoinGameService
     {
         List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
-
-
         public void CreateGame(string verificationCode)
         {
             List<PlayerDTO> ListPlayerDTOs = new List<PlayerDTO>();
@@ -106,6 +104,15 @@ namespace Comunication
 
             };
             gameRoundDTOs.Add(gameRoundDTO);
+        }
+
+        public void EliminateGame(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null) 
+            {
+                gameRoundDTOs.Remove(game);            
+            }
         }
 
         public void ExitGame(string userName, string verificationCode)
@@ -125,15 +132,15 @@ namespace Comunication
         {
             bool status = false;
             var newConnection = OperationContext.Current;
-            var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (lobby != null)
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
             {
                 PlayerDTO player = new PlayerDTO()
                 {
                     Username = username,
                 };
                 player.Connection = newConnection;
-                lobby.playerDTOs.Add(player);
+                game.playerDTOs.Add(player);
                 status = true;
             }
             newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().CodeExist(status);
@@ -141,10 +148,10 @@ namespace Comunication
 
         public void SendWinner(string username, string verificationCode)
         {
-            var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (lobby != null)
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
             {
-                var player = lobby.playerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                var player = game.playerDTOs.FirstOrDefault(iteration => iteration.Username == username);
                 try
                 {
                     var conection = player.Connection.GetCallbackChannel<IJoinGameServiceCallBack>();
@@ -152,7 +159,7 @@ namespace Comunication
                 }
                 catch (CommunicationObjectAbortedException)
                 {
-                    lobby.playerDTOs.Remove(player);                
+                    game.playerDTOs.Remove(player);                
                 }
             }
         }
