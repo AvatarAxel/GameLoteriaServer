@@ -37,6 +37,7 @@ namespace Comunication
             };
             var connection = OperationContext.Current;
             player.Connection = connection;
+            player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(username, "Join Chat");
             playerDTOs.Add(player);
         }
 
@@ -60,6 +61,7 @@ namespace Comunication
             var player = playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
             if (player != null)
             {
+                player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
                 playerDTOs.Remove(player);
             }
         }
@@ -94,12 +96,13 @@ namespace Comunication
     public partial class ServicesExposed : IJoinGameService
     {
         List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
-        public void CreateGame(string verificationCode)
+        public void CreateGame(string verificationCode, int limitPlayers)
         {
             List<PlayerDTO> ListPlayerDTOs = new List<PlayerDTO>();
             GameRoundDTO gameRoundDTO = new GameRoundDTO()
             {
                 VerificationCode = verificationCode,
+                LimitPlayer = limitPlayers,
                 playerDTOs = ListPlayerDTOs
 
             };
@@ -135,15 +138,24 @@ namespace Comunication
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                PlayerDTO player = new PlayerDTO()
+                if (game.LimitPlayer >= game.playerDTOs.Count)
                 {
-                    Username = username,
-                };
-                player.Connection = newConnection;
-                game.playerDTOs.Add(player);
-                status = true;
+                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(true);
+                    return;
+                }
+                else 
+                {
+                    PlayerDTO player = new PlayerDTO()
+                    {
+                        Username = username,
+                    };
+                    player.Connection = newConnection;
+                    game.playerDTOs.Add(player);
+                    status = true;
+                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseTotalPlayers(game.playerDTOs.Count);
+                }
             }
-            newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().CodeExist(status);
+            newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(status);
         }
 
         public void SendWinner(string username, string verificationCode)

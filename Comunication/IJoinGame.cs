@@ -18,7 +18,7 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void ExitGame(string userName, string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void CreateGame(string verificationCode);
+        void CreateGame(string verificationCode, int limitPlayers);
         [OperationContract(IsOneWay = true)]
         void EliminateGame(string verificationCode);
     }
@@ -29,6 +29,10 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void ReciveWinner(string username);
         [OperationContract(IsOneWay = true)]
-        void CodeExist(bool status);
+        void ResponseCodeExist(bool status);
+        [OperationContract(IsOneWay = true)]
+        void ResponseCompleteLobby(bool status);
+        [OperationContract(IsOneWay = true)]
+        void ResponseTotalPlayers(int totalPlayers);
     }
 }
