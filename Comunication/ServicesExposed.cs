@@ -20,7 +20,7 @@ namespace Comunication
         public void AuthenticationLogin(string name, string password)
         {
             UserManager authentication = new UserManager();
-            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password); //InvalidOperationException:
+            PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password);
             OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(playerDTO);
         }
     }
@@ -28,41 +28,74 @@ namespace Comunication
   
     public partial class ServicesExposed : IChatService
     {
-        List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
-        public void JoinChat(string username)
+        List<GameRoundDTO> lobbyChat = new List<GameRoundDTO>();
+        public void CreateChat(string verificationCode)
         {
-            PlayerDTO player = new PlayerDTO()
+            List<PlayerDTO> playerDTOs = new List<PlayerDTO>();
+            GameRoundDTO gameRoundDTO = new GameRoundDTO()
             {
-                Username = username,
+                VerificationCode = verificationCode,
+                playerDTOs = playerDTOs
+
             };
-            var connection = OperationContext.Current;
-            player.Connection = connection;
-            player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(username, "Join Chat");
-            playerDTOs.Add(player);
+            lobbyChat.Add(gameRoundDTO);
         }
 
-        public void SendMessage(string message, string userChat)
+        public void JoinChat(string username, string verificationCode)
         {
-            for (int i = 0; i < playerDTOs.Count; i++) 
+            var ChatNew = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (ChatNew != null)
             {
-                try
-                {                     
-                    var connetion = playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>();
-                    connetion.ReciveMessage(userChat, message);
-                }
-                catch (CommunicationObjectAbortedException)
+                PlayerDTO players = new PlayerDTO()
                 {
-                    playerDTOs.Remove(playerDTOs[i]);
+                    Username = username,
+                };
+                ChatNew.playerDTOs.Add(players);
+                var connection = OperationContext.Current;
+                players.Connection = connection;
+                players.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(username, "Join Chat");
+
+            }
+        }
+
+        public void SendMessage(string message, string userChat, string verificationCode) 
+        {
+            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (ChatExisting != null)
+            {
+                for (int i = 0; i < ChatExisting.playerDTOs.Count; i++)
+                {
+                    try
+                    {
+                        var connetion = ChatExisting.playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>();
+                        connetion.ReciveMessage(userChat, message);
+                    }
+                    catch (CommunicationObjectAbortedException)
+                    {
+                        ChatExisting.playerDTOs.Remove(ChatExisting.playerDTOs[i]);
+                    }
                 }
             }
         }
-        public void ExitChat(string userName)
+        public void ExitChat(string userName, string verificationCode)
         {
-            var player = playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
-            if (player != null)
+            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if(ChatExisting != null)
             {
-                player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
-                playerDTOs.Remove(player);
+                var player = ChatExisting.playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
+                if(player != null)
+                {
+                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
+                    ChatExisting.playerDTOs.Remove(player);
+                }
+            }
+        }
+        public void DeleteChat(string verificationCode)
+        {
+            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (ChatExisting != null)
+            {
+                gameRoundDTOs.Remove(ChatExisting);
             }
         }
     }
@@ -138,7 +171,7 @@ namespace Comunication
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                if (game.LimitPlayer >= game.playerDTOs.Count)
+                if (game.playerDTOs.Count >= game.LimitPlayer)
                 {
                     newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(true);
                     return;

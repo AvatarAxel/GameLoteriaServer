@@ -11,11 +11,15 @@ namespace Comunication
     public interface IChatService
     {
         [OperationContract(IsOneWay = true)]
-        void JoinChat(string username);
+        void JoinChat(string username, string codeVerification);
         [OperationContract(IsOneWay = true)]
-        void SendMessage(string message, string userChat);
+        void SendMessage(string message, string userChat, string codeVerification);
         [OperationContract(IsOneWay = true)]
-        void ExitChat(string userName);
+        void ExitChat(string userName, string codeVerification);
+        [OperationContract(IsOneWay = true)]
+        void CreateChat(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void DeleteChat(string verificationCode);
     }
 
     [ServiceContract]
