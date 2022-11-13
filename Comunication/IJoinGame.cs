@@ -21,6 +21,8 @@ namespace Comunication
         void CreateGame(string verificationCode, int limitPlayers);
         [OperationContract(IsOneWay = true)]
         void EliminateGame(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void ValidationLobby(string verificationCode);
     }
 
     [ServiceContract]

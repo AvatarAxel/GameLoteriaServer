@@ -49,10 +49,9 @@ namespace Comunication
                 PlayerDTO players = new PlayerDTO()
                 {
                     Username = username,
-                };
+                };                
+                players.Connection = OperationContext.Current;
                 ChatNew.playerDTOs.Add(players);
-                var connection = OperationContext.Current;
-                players.Connection = connection;
                 players.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(username, "Join Chat");
 
             }
@@ -67,8 +66,7 @@ namespace Comunication
                 {
                     try
                     {
-                        var connetion = ChatExisting.playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>();
-                        connetion.ReciveMessage(userChat, message);
+                        ChatExisting.playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(userChat, message);
                     }
                     catch (CommunicationObjectAbortedException)
                     {
@@ -145,9 +143,9 @@ namespace Comunication
         public void EliminateGame(string verificationCode)
         {
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null) 
+            if (game != null)
             {
-                gameRoundDTOs.Remove(game);            
+                gameRoundDTOs.Remove(game);       
             }
         }
 
@@ -166,29 +164,18 @@ namespace Comunication
 
         public void JoinGame(string username, string verificationCode)
         {
-            bool status = false;
             var newConnection = OperationContext.Current;
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                if (game.playerDTOs.Count >= game.LimitPlayer)
+                PlayerDTO player = new PlayerDTO()
                 {
-                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(true);
-                    return;
-                }
-                else 
-                {
-                    PlayerDTO player = new PlayerDTO()
-                    {
-                        Username = username,
-                    };
-                    player.Connection = newConnection;
-                    game.playerDTOs.Add(player);
-                    status = true;
-                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseTotalPlayers(game.playerDTOs.Count);
-                }
+                    Username = username,
+                };
+                player.Connection = newConnection;
+                game.playerDTOs.Add(player);
+                newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseTotalPlayers(game.playerDTOs.Count);
             }
-            newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(status);
         }
 
         public void SendWinner(string username, string verificationCode)
@@ -208,5 +195,24 @@ namespace Comunication
                 }
             }
         }
+
+        public void ValidationLobby(string verificationCode)
+        {
+            var newConnection = OperationContext.Current;
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(true);
+                if (game.playerDTOs.Count > game.LimitPlayer)
+                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(true);
+                else
+                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(false);
+            }
+            else
+            {
+                newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(false);
+            }
+        }
+
     }
 }
