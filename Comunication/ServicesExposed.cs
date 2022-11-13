@@ -203,7 +203,7 @@ namespace Comunication
             if (game != null)
             {
                 newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(true);
-                if (game.playerDTOs.Count > game.LimitPlayer)
+                if (game.playerDTOs.Count >= game.LimitPlayer)
                     newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(true);
                 else
                     newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(false);
