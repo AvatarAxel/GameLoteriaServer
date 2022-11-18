@@ -7,15 +7,10 @@ using System.Threading.Tasks;
 
 namespace Comunication
 {
-    [ServiceContract(CallbackContract = typeof(IEmailServiceCallBack))]
+    [ServiceContract]
     public interface IEmailService
     {
-        [OperationContract(IsOneWay = true)]
-        void ValidationEmail(String email);
-    }
-    public interface IEmailServiceCallBack
-    {
-        [OperationContract(IsOneWay = true)]
-        void ResponseEmail(string verificationCode);
+        [OperationContract]
+        string ValidationEmail(String email);
     }
 }
