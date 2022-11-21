@@ -7,16 +7,10 @@ using System.Threading.Tasks;
 
 namespace Comunication
 {
-    [ServiceContract(CallbackContract = typeof(IChangePasswordServiceCallBack))]
+    [ServiceContract]
     internal interface IChangePasswordService
     {
-        [OperationContract(IsOneWay = true)]
-        void ChangePassword(string email, string password);
-    }
-    [ServiceContract]
-    public interface IChangePasswordServiceCallBack
-    {
-        [OperationContract(IsOneWay = true)]
-        void ResponseChangePassword(bool status);
+        [OperationContract]
+        bool ChangePassword(string email, string password);
     }
 }

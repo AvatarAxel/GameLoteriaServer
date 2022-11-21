@@ -17,11 +17,11 @@ namespace Comunication
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.Single)]
     public partial class ServicesExposed : IAuthenticationService
     {
-        public void AuthenticationLogin(string name, string password)
+        public PlayerDTO AuthenticationLogin(string name, string password)
         {
             UserManager authentication = new UserManager();
             PlayerDTO playerDTO = authentication.AuthenticationLogin(name, password);
-            OperationContext.Current.GetCallbackChannel<IAuthenticationServiceCallBack>().ResponseAuthenticated(playerDTO);
+            return playerDTO;
         }
     }
 
@@ -100,11 +100,11 @@ namespace Comunication
     }
     public partial class ServicesExposed : IChangePasswordService
     {
-        public void ChangePassword(string email, string password)
+        public bool ChangePassword(string email, string password)
         {
             UserManager userManager = new UserManager();
             bool status = userManager.ChangePassword(email, password);
-            OperationContext.Current.GetCallbackChannel<IChangePasswordServiceCallBack>().ResponseChangePassword(status);
+            return status;
         }
     }
     public partial class ServicesExposed : IEmailService
@@ -118,12 +118,26 @@ namespace Comunication
     }
     public partial class ServicesExposed : IUserRegistrationService 
     {
-        public void RegistrerUserBD(PlayerDTO player)
+        public bool RegistrerUserDataBase(PlayerDTO player)
         {
             UserManager userManager = new UserManager();
             bool status = userManager.RegisterUser(player);
-            OperationContext.Current.GetCallbackChannel<IUserRegistrationServiceCallBack>().ResponseRegister(status);
+            return status;
         }
+
+        public bool ValidationEmailDataBase(string email)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.ValidationEmail(email);
+            return status;
+        }
+
+        public bool ValidationUsernameDataBase(string username)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.ValidationUsername(username);
+            return status;
+        }   
     }
     public partial class ServicesExposed : IJoinGameService
     {

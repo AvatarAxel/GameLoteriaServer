@@ -8,16 +8,17 @@ using System.Threading.Tasks;
 
 namespace Comunication
 {
-    [ServiceContract(CallbackContract = typeof(IUserRegistrationServiceCallBack))]
+    [ServiceContract]
     public interface IUserRegistrationService
     {
-        [OperationContract(IsOneWay = true)]
-        void RegistrerUserBD(PlayerDTO player);
+        [OperationContract]
+        bool RegistrerUserDataBase(PlayerDTO player);
+
+        [OperationContract]
+        bool ValidationEmailDataBase(string email);
+
+        [OperationContract]
+        bool ValidationUsernameDataBase(string username);
     }
-    [ServiceContract]
-    public interface IUserRegistrationServiceCallBack
-    {
-        [OperationContract(IsOneWay = true)]
-        void ResponseRegister(bool status);
-    }
+
 }

@@ -29,11 +29,37 @@ namespace Logic
             }
             return status;
         }
-        public bool UserExist(string username, string email)
+
+        public Boolean ValidationEmail(string email)
+        {
+            using (var context = new GameLoteriaDataBasesEntities())
+            {
+                var result = context.player.Where(x => x.email == email);
+                if (result.Count() > 0)
+                {
+                    return true;
+                }
+                return false;
+            };
+        }
+
+        public Boolean ValidationUsername(string username)
         {
             using (var context = new GameLoteriaDataBasesEntities())
             {
                 var result = context.player.Where(x => x.username == username);
+                if (result.Count() > 0)
+                {
+                    return true;
+                }
+                return false;
+            };
+        }
+        public bool UserExist(string username, string email)
+        {
+            using (var context = new GameLoteriaDataBasesEntities())
+            {
+                var result = context.player.Where(x => x.username == username && x.email == email);
                 if (result.Count() > 0) 
                 {
                     return true;
