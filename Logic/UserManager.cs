@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Runtime.Remoting.Contexts;
 using System.Runtime.ConstrainedExecution;
+using System.Net.NetworkInformation;
 
 
 namespace Logic
@@ -16,56 +17,73 @@ namespace Logic
         public Boolean RegisterUser(PlayerDTO player) 
         {
             bool status = false;
-            using (var context = new GameLoteriaDataBasesEntities())
+            if (player == null)
             {
-                if (!UserExist(player.Username, player.Email)) {
-                    var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
-                    var resultado = context.SaveChanges();
-                    if (resultado > 0)
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    if (!UserExist(player.Username, player.Email))
                     {
-                        status = true;
+                        var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
+                        var resultado = context.SaveChanges();
+                        if (resultado > 0)
+                        {
+                            status = true;
+                        }
                     }
                 }
+                return status;
             }
             return status;
         }
 
         public Boolean ValidationEmail(string email)
         {
-            using (var context = new GameLoteriaDataBasesEntities())
+            if (email == null)
             {
-                var result = context.player.Where(x => x.email == email);
-                if (result.Count() > 0)
+                using (var context = new GameLoteriaDataBasesEntities())
                 {
-                    return true;
-                }
-                return false;
-            };
+                    var result = context.player.Where(x => x.email == email);
+                    if (result.Count() > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                };
+            }
+            return false;
         }
 
         public Boolean ValidationUsername(string username)
         {
-            using (var context = new GameLoteriaDataBasesEntities())
+            if (username == null)
             {
-                var result = context.player.Where(x => x.username == username);
-                if (result.Count() > 0)
+                using (var context = new GameLoteriaDataBasesEntities())
                 {
-                    return true;
-                }
-                return false;
-            };
+                    var result = context.player.Where(x => x.username == username);
+                    if (result.Count() > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                };
+            }
+            return false;
         }
         public bool UserExist(string username, string email)
         {
-            using (var context = new GameLoteriaDataBasesEntities())
+            if (username == null || email == null)
             {
-                var result = context.player.Where(x => x.username == username || x.email == email);
-                if (result.Count() > 0) 
+                using (var context = new GameLoteriaDataBasesEntities())
                 {
-                    return true;
-                }
-                return false;
-            };
+                    var result = context.player.Where(x => x.username == username || x.email == email);
+                    if (result.Count() > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                };
+            }
+            return false;
         }
         public PlayerDTO AuthenticationLogin(string username, string password)
         {
@@ -73,46 +91,64 @@ namespace Logic
             {
                 IsActive = false
             };
-            using (var context = new GameLoteriaDataBasesEntities())
+
+            if (username == null || password == null)
             {
-                var players = (from Player in context.player where Player.username == username && Player.password == password select Player);
-                
-                if(players.Count() > 0)
+                using (var context = new GameLoteriaDataBasesEntities())
                 {
-                    playerDTO.Username = players.First().username; 
-                    playerDTO.Email = players.First().email;
-                    playerDTO.IsActive = true;
-                    playerDTO.Coin = players.First().coins;
+                    var players = (from Player in context.player where Player.username == username && Player.password == password select Player);
+
+                    if (players.Count() > 0)
+                    {
+                        playerDTO.Username = players.First().username;
+                        playerDTO.Email = players.First().email;
+                        playerDTO.IsActive = true;
+                        playerDTO.Coin = players.First().coins;
+                    }
+
                 }
-              
+                return playerDTO;
             }
             return playerDTO;
         }
 
-        public string ReceiveEmail(string EmailPlayers)
+        public bool ReceiveEmail(string emailPlayers, string codeVerification)
         {
+            if (emailPlayers == null)
+            {
             var random = new Random();
             var value = random.Next(0, 10000);
 
             string verificationCode = value.ToString();
 
-            EmailStructure objLogic = new EmailStructure();
-            string body = "Hello player I enclose your verification code " + verificationCode;
-            objLogic.sendMail(EmailPlayers, " Verification Code ", body);
-
-            return verificationCode;
+                EmailStructure objLogic = new EmailStructure();
+                string body = "Hello player I enclose your verification code " + codeVerification;
+                
+                return objLogic.sendMail(emailPlayers, " Verification Code ", body);      
+            }
+            return false;
         }
 
         public bool ChangePassword(string email, string password)
-         {
-             bool status = true;
-             using (var context = new GameLoteriaDataBasesEntities())
-             {
-                var player = context.player.Where(x => x.email == email).FirstOrDefault();
-                player.password = password;
-             }
+        {
+            bool status = false;
+            if (email == null || password == null)
+            {
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    var player = context.player.Where(x => x.email == email).FirstOrDefault();
+                    if (player != null)
+                    {
+                        player.password = password;
+                        if (context.SaveChanges() > 0)
+                        {
+                            status = true;
+                        }
+                    }
+                }
+            }
             return status;
-         }
+        }
 
     }
 }

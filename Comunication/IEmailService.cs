@@ -11,6 +11,6 @@ namespace Comunication
     public interface IEmailService
     {
         [OperationContract]
-        string ValidationEmail(String email);
+        bool ValidationEmail(String email, string codeVerification);
     }
 }
