@@ -11,6 +11,7 @@ using System.Threading;
 using Microsoft.Win32;
 using System.ServiceModel.Channels;
 using System.Security;
+using System.Text.RegularExpressions;
 
 namespace Comunication
 {
@@ -226,6 +227,23 @@ namespace Comunication
             else
             {
                 newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(false);
+            }
+        }
+
+        public void SendNextHostGame(string verificationCode) 
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                foreach (PlayerDTO user in game.playerDTOs)
+                {
+                    if (!Regex.IsMatch(user.Username, "Invitado"))
+                    {
+                        user.Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendNextHostGameResponse(true);
+                        return;
+                    }
+                }
+                EliminateGame(verificationCode);
             }
         }
 

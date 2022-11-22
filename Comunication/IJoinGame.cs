@@ -23,6 +23,8 @@ namespace Comunication
         void EliminateGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void ValidationLobby(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void SendNextHostGame(string verificationCode);
     }
 
     [ServiceContract]
@@ -36,5 +38,7 @@ namespace Comunication
         void ResponseCompleteLobby(bool status);
         [OperationContract(IsOneWay = true)]
         void ResponseTotalPlayers(int totalPlayers);
+        [OperationContract(IsOneWay = true)]
+        void SendNextHostGameResponse(bool status);
     }
 }

@@ -59,7 +59,7 @@ namespace Logic
         {
             using (var context = new GameLoteriaDataBasesEntities())
             {
-                var result = context.player.Where(x => x.username == username && x.email == email);
+                var result = context.player.Where(x => x.username == username || x.email == email);
                 if (result.Count() > 0) 
                 {
                     return true;
@@ -110,7 +110,6 @@ namespace Logic
              {
                 var player = context.player.Where(x => x.email == email).FirstOrDefault();
                 player.password = password;
-                context.SaveChanges();
              }
             return status;
          }
