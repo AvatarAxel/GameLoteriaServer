@@ -212,24 +212,6 @@ namespace Comunication
             }
         }
 
-        public void ValidationLobby(string verificationCode)
-        {
-            var newConnection = OperationContext.Current;
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
-            {
-                newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(true);
-                if (game.playerDTOs.Count >= game.LimitPlayer)
-                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(true);
-                else
-                    newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCompleteLobby(false);
-            }
-            else
-            {
-                newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseCodeExist(false);
-            }
-        }
-
         public void SendNextHostGame(string verificationCode) 
         {
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
@@ -247,5 +229,25 @@ namespace Comunication
             }
         }
 
+        public bool ResponseCodeExist(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool ResponseCompleteLobby(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                if (game.playerDTOs.Count >= game.LimitPlayer)
+                    return true;
+            }
+            return false;
+        }
     }
 }
