@@ -10,7 +10,7 @@ namespace Logic
 {
      public class EmailStructure
     {
-        public void sendMail(string to, string subject, string body)
+        public bool sendMail(string to, string subject, string body)
         {
             string from = "GameLoteriaUV@outlook.com";
             string displayName = "Game Loteria";
@@ -30,20 +30,21 @@ namespace Logic
             try
             {
                 client.Send(mail);
+                return true;
             }
             catch (ArgumentNullException)
             {
-                /* 
-                 * Como mostrarle al usuario que no se pudo enviar el correo
-                */
+               return false;
             }
-            catch(ObjectDisposedException)
+            catch(InvalidOperationException)
             {
-
+                return false;
             }
+
             catch(SmtpFailedRecipientsException) 
             {
-                
+                //Lo
+                return false;
             }
         }
     }

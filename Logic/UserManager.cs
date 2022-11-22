@@ -112,25 +112,16 @@ namespace Logic
             return playerDTO;
         }
 
-        public string ReceiveEmail(string EmailPlayers)
+        public bool ReceiveEmail(string emailPlayers, string codeVerification)
         {
-            var random = new Random();
-            var valueContinue = random.Next(-10000,0);
-            string valueNext = valueContinue.ToString();
-
-            if (EmailPlayers == null)
+            if (emailPlayers == null)
             {
-                var value = random.Next(0, 10000);
-
-                string verificationCode = value.ToString();
-
                 EmailStructure objLogic = new EmailStructure();
-                string body = "Hello player I enclose your verification code " + verificationCode;
-                objLogic.sendMail(EmailPlayers, " Verification Code ", body);
-
-                return verificationCode;
+                string body = "Hello player I enclose your verification code " + codeVerification;
+                
+                return objLogic.sendMail(emailPlayers, " Verification Code ", body);      
             }
-            return valueNext;
+            return false;
         }
 
         public bool ChangePassword(string email, string password)

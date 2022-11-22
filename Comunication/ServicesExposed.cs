@@ -109,11 +109,11 @@ namespace Comunication
     }
     public partial class ServicesExposed : IEmailService
     {
-        public string ValidationEmail(string email)
+        public bool ValidationEmail(string email, string codeVerification)
         {
             UserManager userManager = new UserManager();
-            string verificationCode = userManager.ReceiveEmail(email);
-            return verificationCode;
+            bool status = userManager.ReceiveEmail(email, codeVerification);
+            return status;
         }
     }
     public partial class ServicesExposed : IUserRegistrationService 
