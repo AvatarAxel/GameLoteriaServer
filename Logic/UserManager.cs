@@ -17,7 +17,7 @@ namespace Logic
         public Boolean RegisterUser(PlayerDTO player) 
         {
             bool status = false;
-            if (player == null)
+            if (player != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -38,7 +38,7 @@ namespace Logic
 
         public Boolean ValidationEmail(string email)
         {
-            if (email == null)
+            if (email != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -55,7 +55,7 @@ namespace Logic
 
         public Boolean ValidationUsername(string username)
         {
-            if (username == null)
+            if (username != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -71,7 +71,7 @@ namespace Logic
         }
         public bool UserExist(string username, string email)
         {
-            if (username == null || email == null)
+            if (username != null || email != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -92,7 +92,7 @@ namespace Logic
                 IsActive = false
             };
 
-            if (username == null || password == null)
+            if (username != null || password != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -114,7 +114,7 @@ namespace Logic
 
         public bool ReceiveEmail(string emailPlayers, string codeVerification)
         {
-            if (emailPlayers == null)
+            if (emailPlayers != null)
             {
             var random = new Random();
             var value = random.Next(0, 10000);
@@ -132,7 +132,7 @@ namespace Logic
         public bool ChangePassword(string email, string password)
         {
             bool status = false;
-            if (email == null || password == null)
+            if (email != null || password != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {

@@ -226,6 +226,7 @@ namespace Comunication
                     }
                 }
                 EliminateGame(verificationCode);
+                DeleteChat(verificationCode);
             }
         }
 
