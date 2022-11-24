@@ -250,5 +250,24 @@ namespace Comunication
             }
             return false;
         }
+
+        public void StartGame(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                RamdomNumbers DeckCardRandom = new RamdomNumbers();
+                List<int> DeckOfCards = DeckCardRandom.FillDeck();
+                for (int i = 0; i < 54; i++) 
+                {
+                    Thread.Sleep(1000);
+                    foreach (PlayerDTO user in game.playerDTOs)
+                    {
+                        user.Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendCard(DeckOfCards[i]);
+                    }
+                }
+            }
+        }
+
     }
 }
