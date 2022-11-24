@@ -23,6 +23,8 @@ namespace Comunication
         void EliminateGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void SendNextHostGame(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void GoToGame(string verificationCode);
         [OperationContract]
         bool ResponseCodeExist(string verificationCode);
         [OperationContract]
@@ -42,5 +44,7 @@ namespace Comunication
         void SendNextHostGameResponse(bool status);
         [OperationContract(IsOneWay = true)]
         void SendCard(int idCard);
+        [OperationContract(IsOneWay = true)]
+        void GoToPlay(bool status);
     }
 }
