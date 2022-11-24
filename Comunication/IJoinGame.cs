@@ -23,12 +23,13 @@ namespace Comunication
         void EliminateGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void SendNextHostGame(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void GoToGame(string verificationCode);
         [OperationContract]
         bool ResponseCodeExist(string verificationCode);
         [OperationContract]
         bool ResponseCompleteLobby(string verificationCode);
-        [OperationContract]
-        void GoToGame(string verificationCode);
+
     }
 
     [ServiceContract]
