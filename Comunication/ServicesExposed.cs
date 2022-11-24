@@ -249,5 +249,17 @@ namespace Comunication
             }
             return false;
         }
+
+        public void GoToGame(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                for (int i = 0; i < game.playerDTOs.Count; i++)
+                {
+                    game.playerDTOs[i].Connection.GetCallbackChannel<IJoinGameServiceCallBack>().GoToPlay(true);
+                }
+            }
+        }
     }
 }
