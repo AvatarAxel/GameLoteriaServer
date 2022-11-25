@@ -273,12 +273,21 @@ namespace Comunication
                 for (int i = 0; i < 54; i++)
                 {
                     Thread.Sleep(1000);
-                    foreach (PlayerDTO user in game.playerDTOs)
+                    for (int j = 0; j < game.playerDTOs.Count; j++)
                     {
-                        user.Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendCard(DeckOfCards[i]);
+                        try
+                        {
+                            game.playerDTOs[j].Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendCard(DeckOfCards[i]);
+                        }
+                        catch (CommunicationObjectAbortedException)
+                        {
+                            game.playerDTOs.Remove(game.playerDTOs[j]);
+                        }
+                       
                     }
                 }
             }
         }
+
     }
 }
