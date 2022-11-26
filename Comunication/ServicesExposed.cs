@@ -268,24 +268,26 @@ namespace Comunication
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                RamdomNumbers DeckCardRandom = new RamdomNumbers();
-                List<int> DeckOfCards = DeckCardRandom.FillDeck();
-                for (int i = 0; i < 54; i++)
-                {
-                    Thread.Sleep(1000);
-                    for (int j = 0; j < game.playerDTOs.Count; j++)
+                Task task = new Task(() => {
+                    RamdomNumbers DeckCardRandom = new RamdomNumbers();
+                    List<int> DeckOfCards = DeckCardRandom.FillDeck();
+                    for (int i = 0; i < 54; i++)
                     {
-                        try
+                        Thread.Sleep(1000);
+                        for (int j = 0; j < game.playerDTOs.Count; j++)
                         {
-                            game.playerDTOs[j].Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendCard(DeckOfCards[i]);
+                            try
+                            {
+                                game.playerDTOs[j].Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendCard(DeckOfCards[i]);
+                            }
+                            catch (CommunicationObjectAbortedException)
+                            {
+                                game.playerDTOs.Remove(game.playerDTOs[j]);
+                            }
                         }
-                        catch (CommunicationObjectAbortedException)
-                        {
-                            game.playerDTOs.Remove(game.playerDTOs[j]);
-                        }
-                       
                     }
-                }
+                });
+                task.Start();
             }
         }
 
