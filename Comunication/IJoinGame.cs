@@ -30,7 +30,7 @@ namespace Comunication
         [OperationContract]
         bool ResponseCompleteLobby(string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void StartGame(string verificationCode);
+        void StartGame(string verificationCode, int speed);
     }
 
     [ServiceContract]

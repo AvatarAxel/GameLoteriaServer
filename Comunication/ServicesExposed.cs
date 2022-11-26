@@ -263,16 +263,16 @@ namespace Comunication
             }
         }
 
-        public void StartGame(string verificationCode)
+        public void StartGame(string verificationCode, int speed)
         {
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 RamdomNumbers DeckCardRandom = new RamdomNumbers();
                 List<int> DeckOfCards = DeckCardRandom.FillDeck();
-                for (int i = 0; i < 54; i++)
+                for (int i = 0; i < 54 && game.playerDTOs.Count>0; i++)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(speed);
                     for (int j = 0; j < game.playerDTOs.Count; j++)
                     {
                         try
