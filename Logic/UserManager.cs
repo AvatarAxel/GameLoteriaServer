@@ -72,7 +72,7 @@ namespace Logic
         }
         public bool UserExist(string username, string email)
         {
-            if (username != null || email != null)
+            if (username != null && email != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
