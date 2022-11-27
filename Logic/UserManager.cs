@@ -14,10 +14,11 @@ namespace Logic
 {
     public class UserManager
     {
+        private ValidateData validate = new ValidateData();
         public Boolean RegisterUser(PlayerDTO player) 
-        {
+        {         
             bool status = false;
-            if (player != null)
+            if (player != null && validate.ValidationEmailFormat(player.Email) == true && validate.ValidationUsernameFormat(player.Username) == true)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -38,7 +39,7 @@ namespace Logic
 
         public Boolean ValidationEmail(string email)
         {
-            if (email != null)
+            if (email != null && validate.ValidationEmailFormat(email))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -55,7 +56,7 @@ namespace Logic
 
         public Boolean ValidationUsername(string username)
         {
-            if (username != null)
+            if (username != null && validate.ValidationUsernameFormat(username) == true)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -92,7 +93,7 @@ namespace Logic
                 IsActive = false
             };
 
-            if (username != null || password != null)
+            if (username != null && password != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -114,25 +115,21 @@ namespace Logic
 
         public bool ReceiveEmail(string emailPlayers, string codeVerification)
         {
-            if (emailPlayers != null)
+            if (emailPlayers != null && codeVerification != null && validate.ValidationEmailFormat(emailPlayers))
             {
-            var random = new Random();
-            var value = random.Next(0, 10000);
-
-            string verificationCode = value.ToString();
-
                 EmailStructure objLogic = new EmailStructure();
                 string body = "Hello player I enclose your verification code " + codeVerification;
                 
                 return objLogic.sendMail(emailPlayers, " Verification Code ", body);      
             }
+
             return false;
         }
 
         public bool ChangePassword(string email, string password)
         {
-            bool status = false;
-            if (email != null || password != null)
+            
+            if (email != null && password != null && validate.ValidationEmailFormat(email))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -142,12 +139,12 @@ namespace Logic
                         player.password = password;
                         if (context.SaveChanges() > 0)
                         {
-                            status = true;
+                            return true;
                         }
                     }
                 }
             }
-            return status;
+            return false;
         }
 
     }

@@ -43,7 +43,6 @@ namespace Logic
 
             catch(SmtpFailedRecipientsException) 
             {
-                //Lo
                 return false;
             }
         }
