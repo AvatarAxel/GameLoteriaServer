@@ -26,7 +26,7 @@ namespace Comunication
         }
     }
 
-  
+
     public partial class ServicesExposed : IChatService
     {
         List<GameRoundDTO> lobbyChat = new List<GameRoundDTO>();
@@ -36,7 +36,7 @@ namespace Comunication
             GameRoundDTO gameRoundDTO = new GameRoundDTO()
             {
                 VerificationCode = verificationCode,
-                playerDTOs = playerDTOs
+                PlayerDTOs = playerDTOs
 
             };
             lobbyChat.Add(gameRoundDTO);
@@ -50,28 +50,28 @@ namespace Comunication
                 PlayerDTO players = new PlayerDTO()
                 {
                     Username = username,
-                };                
+                };
                 players.Connection = OperationContext.Current;
-                ChatNew.playerDTOs.Add(players);
+                ChatNew.PlayerDTOs.Add(players);
                 SendMessage("Join chat", username, verificationCode);
 
             }
         }
 
-        public void SendMessage(string message, string userChat, string verificationCode) 
+        public void SendMessage(string message, string userChat, string verificationCode)
         {
             var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (ChatExisting != null)
             {
-                for (int i = 0; i < ChatExisting.playerDTOs.Count; i++)
+                for (int i = 0; i < ChatExisting.PlayerDTOs.Count; i++)
                 {
                     try
                     {
-                        ChatExisting.playerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(userChat, message);
+                        ChatExisting.PlayerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(userChat, message);
                     }
                     catch (CommunicationObjectAbortedException)
                     {
-                        ChatExisting.playerDTOs.Remove(ChatExisting.playerDTOs[i]);
+                        ChatExisting.PlayerDTOs.Remove(ChatExisting.PlayerDTOs[i]);
                     }
                 }
             }
@@ -79,13 +79,13 @@ namespace Comunication
         public void ExitChat(string userName, string verificationCode)
         {
             var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if(ChatExisting != null)
+            if (ChatExisting != null)
             {
-                var player = ChatExisting.playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
-                if(player != null)
+                var player = ChatExisting.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
+                if (player != null)
                 {
                     player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
-                    ChatExisting.playerDTOs.Remove(player);
+                    ChatExisting.PlayerDTOs.Remove(player);
                     SendMessage("Exited the chat", userName, verificationCode);
                 }
             }
@@ -117,7 +117,7 @@ namespace Comunication
             return status;
         }
     }
-    public partial class ServicesExposed : IUserRegistrationService 
+    public partial class ServicesExposed : IUserRegistrationService
     {
         public bool RegistrerUserDataBase(PlayerDTO player)
         {
@@ -138,9 +138,9 @@ namespace Comunication
             UserManager userManager = new UserManager();
             bool status = userManager.ValidationUsername(username);
             return status;
-        }   
+        }
     }
-    public partial class ServicesExposed : IJoinGameService
+    public partial class ServicesExposed : IGameService
     {
         List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
         public void CreateGame(string verificationCode, int limitPlayers)
@@ -150,7 +150,7 @@ namespace Comunication
             {
                 VerificationCode = verificationCode,
                 LimitPlayer = limitPlayers,
-                playerDTOs = ListPlayerDTOs
+                PlayerDTOs = ListPlayerDTOs
 
             };
             gameRoundDTOs.Add(gameRoundDTO);
@@ -161,7 +161,7 @@ namespace Comunication
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                gameRoundDTOs.Remove(game);       
+                gameRoundDTOs.Remove(game);
             }
         }
 
@@ -170,10 +170,10 @@ namespace Comunication
             var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
             {
-                var player = lobby.playerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
+                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
                 if (player != null)
                 {
-                    lobby.playerDTOs.Remove(player);
+                    lobby.PlayerDTOs.Remove(player);
                 }
             }
         }
@@ -189,8 +189,8 @@ namespace Comunication
                     Username = username,
                 };
                 player.Connection = newConnection;
-                game.playerDTOs.Add(player);
-                newConnection.GetCallbackChannel<IJoinGameServiceCallBack>().ResponseTotalPlayers(game.playerDTOs.Count);
+                game.PlayerDTOs.Add(player);
+                newConnection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(game.PlayerDTOs.Count);
             }
         }
 
@@ -199,29 +199,29 @@ namespace Comunication
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                var player = game.playerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
                 try
                 {
-                    var conection = player.Connection.GetCallbackChannel<IJoinGameServiceCallBack>();
+                    var conection = player.Connection.GetCallbackChannel<IGameServiceCallBack>();
                     conection.ReciveWinner(username);
                 }
                 catch (CommunicationObjectAbortedException)
                 {
-                    game.playerDTOs.Remove(player);                
+                    game.PlayerDTOs.Remove(player);
                 }
             }
         }
 
-        public void SendNextHostGame(string verificationCode) 
+        public void SendNextHostGame(string verificationCode)
         {
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                foreach (PlayerDTO user in game.playerDTOs)
+                foreach (PlayerDTO user in game.PlayerDTOs)
                 {
                     if (!Regex.IsMatch(user.Username, "Invitado"))
                     {
-                        user.Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendNextHostGameResponse(true);
+                        user.Connection.GetCallbackChannel<IGameServiceCallBack>().SendNextHostGameResponse(true);
                         return;
                     }
                 }
@@ -230,6 +230,49 @@ namespace Comunication
             }
         }
 
+        public void GoToGame(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                for (int i = 0; i < game.PlayerDTOs.Count; i++)
+                {
+                    game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
+                }
+            }
+        }
+
+        public void StartGame(string verificationCode, int speed)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                Task task = new Task(() =>
+                {
+                    RamdomNumbers DeckCardRandom = new RamdomNumbers();
+                    List<int> DeckOfCards = DeckCardRandom.FillDeck();
+                    for (int i = 0; i < 54; i++)
+                    {
+                        Thread.Sleep(1000);
+                        for (int j = 0; j < game.PlayerDTOs.Count; j++)
+                        {
+                            try
+                            {
+                                game.PlayerDTOs[j].Connection.GetCallbackChannel<IGameServiceCallBack>().SendCard(DeckOfCards[i]);
+                            }
+                            catch (CommunicationObjectAbortedException)
+                            {
+                                game.PlayerDTOs.Remove(game.PlayerDTOs[j]);
+                            }
+                        }
+                    }
+                });
+                task.Start();
+            }
+        }
+    }
+    public partial class ServicesExposed : IJoinGameService
+    {
         public bool ResponseCodeExist(string verificationCode)
         {
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
@@ -245,51 +288,28 @@ namespace Comunication
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                if (game.playerDTOs.Count >= game.LimitPlayer)
+                if (game.PlayerDTOs.Count >= game.LimitPlayer)
                     return true;
             }
             return false;
         }
-
-        public void GoToGame(string verificationCode)
-        {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
-            {
-                for (int i = 0; i < game.playerDTOs.Count; i++)
-                {
-                    game.playerDTOs[i].Connection.GetCallbackChannel<IJoinGameServiceCallBack>().GoToPlay(true);
-                }
-            }
-        }
-
-        public void StartGame(string verificationCode, int speed)
-        {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
-            {
-                Task task = new Task(() => {
-                    RamdomNumbers DeckCardRandom = new RamdomNumbers();
-                    List<int> DeckOfCards = DeckCardRandom.FillDeck();
-                    for (int i = 0; i < 54; i++)
-                    {
-                        Thread.Sleep(1000);
-                        for (int j = 0; j < game.playerDTOs.Count; j++)
-                        {
-                            try
-                            {
-                                game.playerDTOs[j].Connection.GetCallbackChannel<IJoinGameServiceCallBack>().SendCard(DeckOfCards[i]);
-                            }
-                            catch (CommunicationObjectAbortedException)
-                            {
-                                game.playerDTOs.Remove(game.playerDTOs[j]);
-                            }
-                        }
-                    }
-                });
-                task.Start();
-            }
-        }
-
     }
+
+    public partial class ServicesExposed : IChangeUsernameService
+    {
+        public bool ChangeUsername(string email, string username)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.ChangeUsername(email, username);
+            return status;
+        }
+
+        public bool ValidateAvailabilityUsername(string username)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.ValidationUsername(username);
+            return status;
+        }
+    }
+
 }

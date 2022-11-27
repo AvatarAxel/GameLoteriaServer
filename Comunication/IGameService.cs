@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Comunication
 {
-    [ServiceContract(CallbackContract = typeof(IJoinGameServiceCallBack))]
-    public interface IJoinGameService
+    [ServiceContract(CallbackContract = typeof(IGameServiceCallBack))]
+    public interface IGameService
     {
         [OperationContract(IsOneWay = true)]
         void JoinGame(string username, string verificationCode);
@@ -25,16 +25,12 @@ namespace Comunication
         void SendNextHostGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void GoToGame(string verificationCode);
-        [OperationContract]
-        bool ResponseCodeExist(string verificationCode);
-        [OperationContract]
-        bool ResponseCompleteLobby(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void StartGame(string verificationCode, int speed);
     }
 
     [ServiceContract]
-    public interface IJoinGameServiceCallBack
+    public interface IGameServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
         void ReciveWinner(string username);

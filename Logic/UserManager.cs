@@ -147,6 +147,27 @@ namespace Logic
             return false;
         }
 
+        public bool ChangeUsername(string email, string username)
+        {
+
+            if (email != null && validate.ValidationEmailFormat(email))
+            {
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    var player = context.player.Where(x => x.email == email).FirstOrDefault();
+                    if (player != null)
+                    {
+                        player.username = username;
+                        if (context.SaveChanges() > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
     }
 }
 
