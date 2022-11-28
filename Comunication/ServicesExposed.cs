@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
-using Comunication;
-using System.Xml.Linq;
 using Logic;
 using System.Threading;
-using Microsoft.Win32;
-using System.ServiceModel.Channels;
-using System.Security;
 using System.Text.RegularExpressions;
 
 namespace Comunication
@@ -143,16 +136,10 @@ namespace Comunication
     public partial class ServicesExposed : IGameService
     {
         List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
-        public void CreateGame(string verificationCode, int limitPlayers)
+        public void CreateGame(GameRoundDTO gameRoundDTO)
         {
             List<PlayerDTO> ListPlayerDTOs = new List<PlayerDTO>();
-            GameRoundDTO gameRoundDTO = new GameRoundDTO()
-            {
-                VerificationCode = verificationCode,
-                LimitPlayer = limitPlayers,
-                PlayerDTOs = ListPlayerDTOs
-
-            };
+            gameRoundDTO.PlayerDTOs = ListPlayerDTOs;
             gameRoundDTOs.Add(gameRoundDTO);
         }
 
@@ -242,18 +229,18 @@ namespace Comunication
             }
         }
 
-        public void StartGame(string verificationCode, int speed)
+        public void StartGame(string verificationCode)
         {
             var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 Task task = new Task(() =>
                 {
-                    RamdomNumbers DeckCardRandom = new RamdomNumbers();
+                    RandomNumbers DeckCardRandom = new RandomNumbers();
                     List<int> DeckOfCards = DeckCardRandom.FillDeck();
                     for (int i = 0; i < 54; i++)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(game.Speed);
                         for (int j = 0; j < game.PlayerDTOs.Count; j++)
                         {
                             try

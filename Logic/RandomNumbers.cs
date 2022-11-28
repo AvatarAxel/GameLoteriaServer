@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class RamdomNumbers
+    public class RandomNumbers
     {
         public List<int> FillDeck()
         {

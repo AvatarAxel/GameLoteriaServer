@@ -62,7 +62,7 @@
     <Compile Include="GameRoundDTO.cs" />
     <Compile Include="PlayerDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RamdomNumbers.cs" />
+    <Compile Include="RandomNumbers.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="ValidateData.cs" />
   </ItemGroup>
