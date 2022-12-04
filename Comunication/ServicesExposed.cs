@@ -69,6 +69,7 @@ namespace Comunication
                         }
                     }
                 });
+                task.Start();
             }
         }
         public void ExitChat(string userName, string verificationCode)
