@@ -56,17 +56,19 @@ namespace Comunication
             var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (ChatExisting != null)
             {
-                for (int i = 0; i < ChatExisting.PlayerDTOs.Count; i++)
-                {
-                    try
+                Task task = new Task(() => {
+                    for (int i = 0; i < ChatExisting.PlayerDTOs.Count; i++)
                     {
-                        ChatExisting.PlayerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(userChat, message);
+                        try
+                        {
+                            ChatExisting.PlayerDTOs[i].Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(userChat, message);
+                        }
+                        catch (CommunicationObjectAbortedException)
+                        {
+                            ChatExisting.PlayerDTOs.Remove(ChatExisting.PlayerDTOs[i]);
+                        }
                     }
-                    catch (CommunicationObjectAbortedException)
-                    {
-                        ChatExisting.PlayerDTOs.Remove(ChatExisting.PlayerDTOs[i]);
-                    }
-                }
+                });
             }
         }
         public void ExitChat(string userName, string verificationCode)
@@ -206,7 +208,7 @@ namespace Comunication
             {
                 foreach (PlayerDTO user in game.PlayerDTOs)
                 {
-                    if (!Regex.IsMatch(user.Username, "Invitado"))
+                    if (!Regex.IsMatch(user.Username, "Invitado") || !Regex.IsMatch(user.Username, "Guest"))
                     {
                         user.Connection.GetCallbackChannel<IGameServiceCallBack>().SendNextHostGameResponse(true);
                         return;
