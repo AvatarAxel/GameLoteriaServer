@@ -1,0 +1,9 @@
+﻿C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\EmailStructure.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\GameRoundDTO.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\PlayerDTO.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\Properties\AssemblyInfo.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\RandomNumbers.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\UserManager.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\ValidateData.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\App.config
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Logic\packages.config

@@ -14,17 +14,18 @@ namespace Logic
 {
     public class UserManager
     {
-        private ValidateData validate = new ValidateData();
         public Boolean RegisterUser(PlayerDTO player) 
         {         
             bool status = false;
-            if (player != null && validate.ValidationEmailFormat(player.Email) == true && validate.ValidationUsernameFormat(player.Username) == true)
+            ValidateData validate = new ValidateData();
+
+            if (player != null && validate.ValidationEmailFormat(player.Email) && validate.ValidationUsernameFormat(player.Username))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
                     if (!UserExist(player.Username, player.Email))
                     {
-                        var newPlayerDB = context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
+                        context.player.Add(new player() { email = player.Email, username = player.Username, password = player.Password, coins = 500, birthday = player.Birthday });
                         var resultado = context.SaveChanges();
                         if (resultado > 0)
                         {
@@ -39,6 +40,8 @@ namespace Logic
 
         public Boolean ValidationEmail(string email)
         {
+            ValidateData validate = new ValidateData();
+
             if (email != null && validate.ValidationEmailFormat(email))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
@@ -49,14 +52,16 @@ namespace Logic
                         return true;
                     }
                     return false;
-                };
+                }
             }
             return false;
         }
 
         public Boolean ValidationUsername(string username)
         {
-            if (username != null && validate.ValidationUsernameFormat(username) == true)
+            ValidateData validate = new ValidateData();
+
+            if (username != null && validate.ValidationUsernameFormat(username))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -66,7 +71,7 @@ namespace Logic
                         return true;
                     }
                     return false;
-                };
+                }
             }
             return false;
         }
@@ -82,7 +87,7 @@ namespace Logic
                         return true;
                     }
                     return false;
-                };
+                }
             }
             return false;
         }
@@ -115,6 +120,8 @@ namespace Logic
 
         public bool ReceiveEmail(string emailPlayers, string codeVerification)
         {
+            ValidateData validate = new ValidateData();
+
             if (emailPlayers != null && codeVerification != null && validate.ValidationEmailFormat(emailPlayers))
             {
                 EmailStructure objLogic = new EmailStructure();
@@ -128,7 +135,8 @@ namespace Logic
 
         public bool ChangePassword(string email, string password)
         {
-            
+            ValidateData validate = new ValidateData();
+
             if (email != null && password != null && validate.ValidationEmailFormat(email))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
@@ -149,6 +157,7 @@ namespace Logic
 
         public bool ChangeUsername(string email, string username)
         {
+            ValidateData validate = new ValidateData();
 
             if (email != null && validate.ValidationEmailFormat(email))
             {

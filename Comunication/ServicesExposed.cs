@@ -35,9 +35,9 @@ namespace Comunication
             lobbyChat.Add(gameRoundDTO);
         }
 
-        public void JoinChat(string username, string verificationCode)
+        public void JoinChat(string username, string codeVerification)
         {
-            var ChatNew = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var ChatNew = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == codeVerification);
             if (ChatNew != null)
             {
                 PlayerDTO players = new PlayerDTO()
@@ -46,14 +46,14 @@ namespace Comunication
                 };
                 players.Connection = OperationContext.Current;
                 ChatNew.PlayerDTOs.Add(players);
-                SendMessage("Join chat", username, verificationCode);
+                SendMessage("Join chat", username, codeVerification);
 
             }
         }
 
-        public void SendMessage(string message, string userChat, string verificationCode)
+        public void SendMessage(string message, string userChat, string codeVerification)
         {
-            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == codeVerification);
             if (ChatExisting != null)
             {
                 Task task = new Task(() => {
@@ -71,10 +71,10 @@ namespace Comunication
                 });
                 task.Start();
             }
-        }
-        public void ExitChat(string userName, string verificationCode)
+        } 
+        public void ExitChat(string userName, string codeVerification)
         {
-            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == codeVerification);
             if (ChatExisting != null)
             {
                 var player = ChatExisting.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
@@ -82,7 +82,7 @@ namespace Comunication
                 {
                     player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
                     ChatExisting.PlayerDTOs.Remove(player);
-                    SendMessage("Exited the chat", userName, verificationCode);
+                    SendMessage("Exited the chat", userName, codeVerification);
                 }
             }
         }
@@ -139,11 +139,11 @@ namespace Comunication
     public partial class ServicesExposed : IGameService
     {
         List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
-        public void CreateGame(GameRoundDTO gameRoundDTO)
+        public void CreateGame(GameRoundDTO game)
         {
             List<PlayerDTO> ListPlayerDTOs = new List<PlayerDTO>();
-            gameRoundDTO.PlayerDTOs = ListPlayerDTOs;
-            gameRoundDTOs.Add(gameRoundDTO);
+            game.PlayerDTOs = ListPlayerDTOs;
+            gameRoundDTOs.Add(game);
         }
 
         public void EliminateGame(string verificationCode)
@@ -190,14 +190,17 @@ namespace Comunication
             if (game != null)
             {
                 var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
-                try
+                if (player != null)
                 {
-                    var conection = player.Connection.GetCallbackChannel<IGameServiceCallBack>();
-                    conection.ReciveWinner(username);
-                }
-                catch (CommunicationObjectAbortedException)
-                {
-                    game.PlayerDTOs.Remove(player);
+                    try
+                    {
+                        var conection = player.Connection.GetCallbackChannel<IGameServiceCallBack>();
+                        conection.ReciveWinner(username);
+                    }
+                    catch (CommunicationObjectAbortedException)
+                    {
+                        game.PlayerDTOs.Remove(player);
+                    }
                 }
             }
         }
@@ -279,7 +282,9 @@ namespace Comunication
             if (game != null)
             {
                 if (game.PlayerDTOs.Count >= game.LimitPlayer)
+                {
                     return true;
+                }
             }
             return false;
         }

@@ -1,0 +1,11 @@
+﻿C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IChangeUsernameService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IJoinGameService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\ServicesExposed.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IAuthenticationService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IChangePasswordService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IChatService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IEmailService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IGameService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\IUserRegistrationService.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\Properties\AssemblyInfo.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Comunication\App.config
