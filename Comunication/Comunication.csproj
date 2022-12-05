@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="IChangeUsernameService.cs" />
     <Compile Include="IJoinGameService.cs" />
+    <Compile Include="ILoteriaService.cs" />
     <Compile Include="ServicesExposed.cs" />
     <Compile Include="IAuthenticationService.cs" />
     <Compile Include="IChangePasswordService.cs" />
