@@ -16,5 +16,7 @@ namespace Logic
         public int Speed { get; set; }
         [DataMember]
         public bool PrivateGame { get; set; }
+        [DataMember]
+        public int Bet { get; set; }
     }
 }

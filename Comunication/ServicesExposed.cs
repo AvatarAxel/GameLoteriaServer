@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Logic;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.ServiceModel.Channels;
 
 namespace Comunication
 {
@@ -138,26 +139,26 @@ namespace Comunication
     }
     public partial class ServicesExposed : IGameService
     {
-        List<GameRoundDTO> gameRoundDTOs = new List<GameRoundDTO>();
+        List<GameRoundDTO> lobbyList = new List<GameRoundDTO>();
         public void CreateGame(GameRoundDTO game)
         {
             List<PlayerDTO> ListPlayerDTOs = new List<PlayerDTO>();
             game.PlayerDTOs = ListPlayerDTOs;
-            gameRoundDTOs.Add(game);
+            lobbyList.Add(game);
         }
 
         public void EliminateGame(string verificationCode)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
-                gameRoundDTOs.Remove(game);
+                lobbyList.Remove(game);
             }
         }
 
         public void ExitGame(string userName, string verificationCode)
         {
-            var lobby = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
             {
                 var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
@@ -171,7 +172,7 @@ namespace Comunication
         public void JoinGame(string username, string verificationCode)
         {
             var newConnection = OperationContext.Current;
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 PlayerDTO player = new PlayerDTO()
@@ -184,30 +185,9 @@ namespace Comunication
             }
         }
 
-        public void SendWinner(string username, string verificationCode)
-        {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
-            {
-                var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
-                if (player != null)
-                {
-                    try
-                    {
-                        var conection = player.Connection.GetCallbackChannel<IGameServiceCallBack>();
-                        conection.ReciveWinner(username);
-                    }
-                    catch (CommunicationObjectAbortedException)
-                    {
-                        game.PlayerDTOs.Remove(player);
-                    }
-                }
-            }
-        }
-
         public void SendNextHostGame(string verificationCode)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 foreach (PlayerDTO user in game.PlayerDTOs)
@@ -225,7 +205,7 @@ namespace Comunication
 
         public void GoToGame(string verificationCode)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 for (int i = 0; i < game.PlayerDTOs.Count; i++)
@@ -235,40 +215,12 @@ namespace Comunication
             }
         }
 
-        public void StartGame(string verificationCode)
-        {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
-            {
-                Task task = new Task(() =>
-                {
-                    RandomNumbers DeckCardRandom = new RandomNumbers();
-                    List<int> DeckOfCards = DeckCardRandom.FillDeck();
-                    for (int i = 0; i < 54; i++)
-                    {
-                        Thread.Sleep(game.Speed);
-                        for (int j = 0; j < game.PlayerDTOs.Count; j++)
-                        {
-                            try
-                            {
-                                game.PlayerDTOs[j].Connection.GetCallbackChannel<IGameServiceCallBack>().SendCard(DeckOfCards[i]);
-                            }
-                            catch (CommunicationObjectAbortedException)
-                            {
-                                game.PlayerDTOs.Remove(game.PlayerDTOs[j]);
-                            }
-                        }
-                    }
-                });
-                task.Start();
-            }
-        }
     }
     public partial class ServicesExposed : IJoinGameService
     {
         public bool ResponseCodeExist(string verificationCode)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 return true;
@@ -278,7 +230,7 @@ namespace Comunication
 
         public bool ResponseCompleteLobby(string verificationCode)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 if (game.PlayerDTOs.Count >= game.LimitPlayer)
@@ -304,6 +256,114 @@ namespace Comunication
             UserManager userManager = new UserManager();
             bool status = userManager.ValidationUsername(username);
             return status;
+        }
+    }
+
+    public partial class ServicesExposed : ILoteriaService
+    {
+        List<GameRoundDTO> loteriaList = new List<GameRoundDTO>();
+        public void CreateLoteria(string verificationCode)
+        {
+            List<PlayerDTO> playerLoteria = new List<PlayerDTO>();
+            GameRoundDTO loteria = new GameRoundDTO()
+            {
+                VerificationCode = verificationCode,
+                PlayerDTOs = playerLoteria
+            };
+            loteriaList.Add(loteria);
+        }
+
+        public void DeleteLoteria(string verificationCode)
+        {
+            var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (loteria != null)
+            {
+                loteriaList.Remove(loteria);
+            }
+        }
+
+        public void ExitLoteria(string username, string verificationCode)
+        {
+            var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (loteria != null)
+            {
+                var player = loteria.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                if (player != null)
+                {
+                    loteria.PlayerDTOs.Remove(player);
+                }
+            }
+        }
+
+        public void JoinLoteria(string username, string verificationCode)
+        {
+            var newConnection = OperationContext.Current;
+            var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (loteria != null)
+            {
+                PlayerDTO player = new PlayerDTO()
+                {
+                    Username = username,
+                };
+                player.Connection = newConnection;
+                loteria.PlayerDTOs.Add(player);
+                //TODO Bets
+            }
+        }
+
+        public void ReciveWinner(string username, string verificationCode)
+        {
+            var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (loteria != null)
+            {
+                Task task = new Task(() => {
+                    for (int i = 0; i < loteria.PlayerDTOs.Count; i++)
+                    {
+                        try
+                        {
+                            loteria.PlayerDTOs[i].Connection.GetCallbackChannel<ILoteriaServiceCallBack>().SendWinner(username);
+                        }
+                        catch (CommunicationObjectAbortedException)
+                        {
+                            loteria.PlayerDTOs.Remove(loteria.PlayerDTOs[i]);
+                        }
+                    }
+                });
+                task.Start();
+            }
+        }
+
+        public void StartGameLoteria(string verificationCode)
+        {
+            var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
+            if (loteria != null && lobby != null)
+            {
+                loteria.Bet = lobby.Bet;
+                loteria.Speed = lobby.Speed;
+                Task task = new Task(() =>
+                {
+                    Thread.Sleep(6000);
+                    RandomNumbers DeckCardRandom = new RandomNumbers();
+                    List<int> DeckOfCards = DeckCardRandom.FillDeck();
+                    for (int i = 0; i < 54; i++)
+                    {
+                        Thread.Sleep(loteria.Speed);
+                        for (int j = 0; j < loteria.PlayerDTOs.Count; j++)
+                        {
+                            try
+                            {
+                                loteria.PlayerDTOs[j].Connection.GetCallbackChannel<ILoteriaServiceCallBack>().SendCard(DeckOfCards[i]);
+                            }
+                            catch (CommunicationObjectAbortedException)
+                            {
+                                loteria.PlayerDTOs.Remove(loteria.PlayerDTOs[j]);
+                            }
+                        }
+                    }
+                });
+                task.Start();
+            }
         }
     }
 

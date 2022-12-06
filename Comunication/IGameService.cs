@@ -14,8 +14,6 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void JoinGame(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void SendWinner(string username, string verificationCode);
-        [OperationContract(IsOneWay = true)]
         void ExitGame(string userName, string verificationCode);
         [OperationContract(IsOneWay = true)]
         void CreateGame(GameRoundDTO game);
@@ -25,21 +23,15 @@ namespace Comunication
         void SendNextHostGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void GoToGame(string verificationCode);
-        [OperationContract(IsOneWay = true)]
-        void StartGame(string verificationCode);
     }
 
     [ServiceContract]
     public interface IGameServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
-        void ReciveWinner(string username);
-        [OperationContract(IsOneWay = true)]
         void ResponseTotalPlayers(int totalPlayers);
         [OperationContract(IsOneWay = true)]
         void SendNextHostGameResponse(bool status);
-        [OperationContract(IsOneWay = true)]
-        void SendCard(int idCard);
         [OperationContract(IsOneWay = true)]
         void GoToPlay(bool status);
     }
