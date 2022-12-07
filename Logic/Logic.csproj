@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmailStructure.cs" />
+    <Compile Include="GameManager.cs" />
     <Compile Include="GameRoundDTO.cs" />
     <Compile Include="PlayerDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

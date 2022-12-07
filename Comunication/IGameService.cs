@@ -23,6 +23,8 @@ namespace Comunication
         void SendNextHostGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void GoToGame(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void UpdateTotalPlayers(string verificationCode);
     }
 
     [ServiceContract]

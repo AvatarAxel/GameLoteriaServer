@@ -19,7 +19,7 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void ExitLoteria(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void ReciveWinner(string username,string verificationCode);
+        void ReciveWinner(string username,string verificationCode, int totalCoins);
         [OperationContract(IsOneWay = true)]
         void StartGameLoteria(string verificationCode);
     }

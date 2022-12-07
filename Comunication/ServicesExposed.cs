@@ -165,6 +165,7 @@ namespace Comunication
                 if (player != null)
                 {
                     lobby.PlayerDTOs.Remove(player);
+                    UpdateTotalPlayers(verificationCode);
                 }
             }
         }
@@ -181,7 +182,7 @@ namespace Comunication
                 };
                 player.Connection = newConnection;
                 game.PlayerDTOs.Add(player);
-                newConnection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(game.PlayerDTOs.Count);
+                UpdateTotalPlayers(verificationCode);
             }
         }
 
@@ -215,6 +216,17 @@ namespace Comunication
             }
         }
 
+        public void UpdateTotalPlayers(string verificationCode)
+        {
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                for (int i = 0; i < game.PlayerDTOs.Count; i++)
+                {
+                    game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(game.PlayerDTOs.Count);
+                }
+            }
+        }
     }
     public partial class ServicesExposed : IJoinGameService
     {
@@ -301,18 +313,22 @@ namespace Comunication
             var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (loteria != null)
             {
-                PlayerDTO player = new PlayerDTO()
+                GameManager gameManager = new GameManager();
+                if(gameManager.Betting(username, loteria.Bet))
                 {
-                    Username = username,
-                };
-                player.Connection = newConnection;
-                loteria.PlayerDTOs.Add(player);
-                //TODO Bets
+                    PlayerDTO player = new PlayerDTO()
+                    {
+                        Username = username,
+                    };
+                    player.Connection = newConnection;
+                    loteria.PlayerDTOs.Add(player);
+                }
             }
         }
 
-        public void ReciveWinner(string username, string verificationCode)
+        public void ReciveWinner(string username, string verificationCode, int totalCoins)
         {
+            GameManager gameManager = new GameManager();
             var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (loteria != null)
             {
@@ -320,7 +336,7 @@ namespace Comunication
                     for (int i = 0; i < loteria.PlayerDTOs.Count; i++)
                     {
                         try
-                        {
+                        {                            
                             loteria.PlayerDTOs[i].Connection.GetCallbackChannel<ILoteriaServiceCallBack>().SendWinner(username);
                         }
                         catch (CommunicationObjectAbortedException)
@@ -329,7 +345,10 @@ namespace Comunication
                         }
                     }
                 });
-                task.Start();
+                if (gameManager.ReceiveCoinsEarned(username, totalCoins))
+                {
+                    task.Start();
+                }
             }
         }
 
@@ -343,7 +362,7 @@ namespace Comunication
                 loteria.Speed = lobby.Speed;
                 Task task = new Task(() =>
                 {
-                    Thread.Sleep(6000);
+                    Thread.Sleep(3000);
                     RandomNumbers DeckCardRandom = new RandomNumbers();
                     List<int> DeckOfCards = DeckCardRandom.FillDeck();
                     for (int i = 0; i < 54; i++)
