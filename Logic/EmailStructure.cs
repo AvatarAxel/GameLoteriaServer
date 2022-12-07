@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic
 {
-     public class EmailStructure
+    public class EmailStructure
     {
-        public bool sendMail(string to, string subject, string body)
+        public bool SendMail(string to, string subject, string body)
         {
             string from = "GameLoteriaUV@outlook.com";
             string displayName = "Game Loteria";

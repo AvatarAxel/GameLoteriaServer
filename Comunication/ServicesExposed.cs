@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Logic;
 using System.Threading;
 using System.Text.RegularExpressions;
-using System.ServiceModel.Channels;
 
 namespace Comunication
 {
@@ -191,6 +190,7 @@ namespace Comunication
             var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
+                //TODO "Change" foreach to "for"
                 foreach (PlayerDTO user in game.PlayerDTOs)
                 {
                     if (!Regex.IsMatch(user.Username, "Invitado") || !Regex.IsMatch(user.Username, "Guest"))

@@ -1,13 +1,6 @@
 ﻿using Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.ModelConfiguration.Configuration;
-using System.Runtime.Remoting.Contexts;
-using System.Runtime.ConstrainedExecution;
-using System.Net.NetworkInformation;
 
 
 namespace Logic
@@ -127,7 +120,7 @@ namespace Logic
                 EmailStructure objLogic = new EmailStructure();
                 string body = "Hello player I enclose your verification code " + codeVerification;
                 
-                return objLogic.sendMail(emailPlayers, " Verification Code ", body);      
+                return objLogic.SendMail(emailPlayers, " Verification Code ", body);      
             }
 
             return false;
