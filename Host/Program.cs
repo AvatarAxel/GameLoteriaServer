@@ -4,10 +4,11 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Host
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {

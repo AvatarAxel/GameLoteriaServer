@@ -46,7 +46,7 @@ namespace Comunication
                 };
                 players.Connection = OperationContext.Current;
                 ChatNew.PlayerDTOs.Add(players);
-                SendMessage("Join chat", username, verificationCode);
+                SendMessage("TXx02Ejgy03aPLbqJ/yr6g==", username, verificationCode);
 
             }
         }
@@ -80,7 +80,7 @@ namespace Comunication
                 var player = ChatExisting.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
                 if (player != null)
                 {
-                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
+                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "vSwpaapgnALaPLbqJ/yr6g==");
                     ChatExisting.PlayerDTOs.Remove(player);
                     SendMessage("Exited the chat", userName, verificationCode);
                 }

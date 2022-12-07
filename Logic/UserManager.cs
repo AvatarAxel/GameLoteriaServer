@@ -8,6 +8,7 @@ using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Runtime.Remoting.Contexts;
 using System.Runtime.ConstrainedExecution;
 using System.Net.NetworkInformation;
+using System.Configuration;
 
 
 namespace Logic
@@ -18,7 +19,7 @@ namespace Logic
         public Boolean RegisterUser(PlayerDTO player) 
         {         
             bool status = false;
-            if (player != null && validate.ValidationEmailFormat(player.Email) == true && validate.ValidationUsernameFormat(player.Username) == true)
+            if (player != null && validate.ValidationEmailFormat(player.Email) && validate.ValidationUsernameFormat(player.Username))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
@@ -56,7 +57,7 @@ namespace Logic
 
         public Boolean ValidationUsername(string username)
         {
-            if (username != null && validate.ValidationUsernameFormat(username) == true)
+            if (username != null && validate.ValidationUsernameFormat(username))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
