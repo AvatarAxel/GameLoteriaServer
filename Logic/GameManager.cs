@@ -15,7 +15,7 @@ namespace Logic
                     var player = context.player.Where(x => x.username == username).FirstOrDefault();
                     if (player != null)
                     {
-                        if (player.coins > bet) {
+                        if (player.coins >= bet) {
                             player.coins = player.coins - bet;
                             if (context.SaveChanges() > 0)
                             {
@@ -49,10 +49,10 @@ namespace Logic
             return false;
         }
 
-        public int UpdateCurrentCoins (string username)
+        public int getCoins (string username)
         {
             ValidateData validate = new ValidateData();
-            if (validate.ValidationEmailFormat(username))
+            if (validate.ValidationUsernameFormat(username))
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {

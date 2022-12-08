@@ -113,6 +113,7 @@ namespace Comunication
             return status;
         }
     }
+
     public partial class ServicesExposed : IUserRegistrationService
     {
         public bool RegistrerUserDataBase(PlayerDTO player)
@@ -193,7 +194,7 @@ namespace Comunication
                 //TODO "Change" foreach to "for"
                 foreach (PlayerDTO user in game.PlayerDTOs)
                 {
-                    if (!Regex.IsMatch(user.Username, "Invitado") || !Regex.IsMatch(user.Username, "Guest"))
+                    if (!Regex.IsMatch(user.Username, "Invitado") && !Regex.IsMatch(user.Username, "Guest"))
                     {
                         user.Connection.GetCallbackChannel<IGameServiceCallBack>().SendNextHostGameResponse(true);
                         return;
@@ -211,7 +212,22 @@ namespace Comunication
             {
                 for (int i = 0; i < game.PlayerDTOs.Count; i++)
                 {
-                    game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
+                    try
+                    {
+                        GameManager gameManager = new GameManager();
+                        if (gameManager.getCoins(game.PlayerDTOs[i].Username) >= game.Bet)
+                        {
+                            game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
+                        }
+                        else
+                        {
+                            game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(false);
+                        }
+                    }
+                    catch (CommunicationObjectAbortedException)
+                    { 
+                        game.PlayerDTOs.Remove(game.PlayerDTOs[i]);
+                    }
                 }
             }
         }
@@ -311,9 +327,11 @@ namespace Comunication
         {
             var newConnection = OperationContext.Current;
             var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
             if (loteria != null)
             {
-                GameManager gameManager = new GameManager();
+                loteria.Bet = lobby.Bet;               
+                GameManager gameManager = new GameManager();            
                 if(gameManager.Betting(username, loteria.Bet))
                 {
                     PlayerDTO player = new PlayerDTO()
@@ -323,6 +341,7 @@ namespace Comunication
                     player.Connection = newConnection;
                     loteria.PlayerDTOs.Add(player);
                 }
+                //TODO
             }
         }
 
@@ -358,7 +377,6 @@ namespace Comunication
             var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
             if (loteria != null && lobby != null)
             {
-                loteria.Bet = lobby.Bet;
                 loteria.Speed = lobby.Speed;
                 Task task = new Task(() =>
                 {

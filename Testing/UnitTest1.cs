@@ -179,7 +179,6 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-
         [TestMethod]
         public void ReceiveEmail_Unsuccessful()
         {
@@ -195,7 +194,7 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void ReceiveEmail_Successful()
         {
             bool expectedResult = true;
@@ -208,7 +207,7 @@ namespace Testing
             actualResult = userManagerTest.ReceiveEmail(email, codeVerification);
 
             Assert.AreEqual(expectedResult, actualResult);
-        }
+        }*/
 
         [TestMethod]
         public void ChangePassword_Successful()
@@ -241,7 +240,6 @@ namespace Testing
             UserManager userManagerTest = new UserManager();
             playerDTO1 = userManagerTest.AuthenticationLogin(playerDTO1.Username, playerDTO1.Password);
 
-            //playerDTO.Equals(playerDTO1);
             Assert.Equals(playerDTO, playerDTO1);
         }
 
@@ -266,11 +264,5 @@ namespace Testing
             Assert.Equals(playerDTO, playerDTO1);
         }
 
-        /*
-                                 playerDTO.Username = players.First().username;
-                        playerDTO.Email = players.First().email;
-                        playerDTO.IsActive = true;
-                        playerDTO.Coin = players.First().coins;
-         */
     }
 }
