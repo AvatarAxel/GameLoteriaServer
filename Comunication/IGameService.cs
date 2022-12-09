@@ -1,6 +1,7 @@
 ﻿using Logic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -27,6 +28,9 @@ namespace Comunication
         void GoToGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void StartGame(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void BanPlayer(string verificationCode, string username);
+
     }
 
     [ServiceContract]
@@ -42,5 +46,9 @@ namespace Comunication
         void SendCard(int idCard);
         [OperationContract(IsOneWay = true)]
         void GoToPlay(bool status);
+        [OperationContract(IsOneWay = true)]
+        void GetListPlayer(List<string> PlayerLobby);
+        [OperationContract(IsOneWay = true)]
+        void BanPlayerResponse(bool status);
     }
 }
