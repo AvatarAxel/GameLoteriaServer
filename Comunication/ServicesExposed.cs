@@ -215,7 +215,8 @@ namespace Comunication
                     try
                     {
                         GameManager gameManager = new GameManager();
-                        if (gameManager.getCoins(game.PlayerDTOs[i].Username) >= game.Bet)
+                        int CoinOfPlayer = gameManager.GetCoins(game.PlayerDTOs[i].Username);
+                        if (CoinOfPlayer >= game.Bet)
                         {
                             game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
                         }
@@ -268,6 +269,21 @@ namespace Comunication
             }
             return false;
         }
+
+        public bool ValidateCoins(string username, string verificationCode)
+        {
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            GameManager gameManager = new GameManager();
+            if (lobby != null)
+            {
+                if (gameManager.GetCoins(username) >= lobby.Bet)
+                { 
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
     public partial class ServicesExposed : IChangeUsernameService
@@ -341,7 +357,6 @@ namespace Comunication
                     player.Connection = newConnection;
                     loteria.PlayerDTOs.Add(player);
                 }
-                //TODO
             }
         }
 
@@ -364,10 +379,8 @@ namespace Comunication
                         }
                     }
                 });
-                if (gameManager.ReceiveCoinsEarned(username, totalCoins))
-                {
-                    task.Start();
-                }
+                gameManager.ReceiveCoinsEarned(username, totalCoins);
+                task.Start();
             }
         }
 

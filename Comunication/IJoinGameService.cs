@@ -9,5 +9,7 @@ namespace Comunication
         bool ResponseCodeExist(string verificationCode);
         [OperationContract]
         bool ResponseCompleteLobby(string verificationCode);
+        [OperationContract]
+        bool ValidateCoins(string username, string verificationCode);
     }
 }

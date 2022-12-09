@@ -26,7 +26,5 @@ namespace Comunication
         void SendCard(int idCard);
         [OperationContract(IsOneWay = true)]
         void SendWinner(string username);
-        [OperationContract(IsOneWay = true)]
-        void StopGame(bool status);
     }
 }

@@ -49,7 +49,7 @@ namespace Logic
             return false;
         }
 
-        public int getCoins (string username)
+        public int GetCoins (string username)
         {
             ValidateData validate = new ValidateData();
             if (validate.ValidationUsernameFormat(username))
@@ -59,10 +59,7 @@ namespace Logic
                     var player = context.player.Where(x => x.username == username).FirstOrDefault();
                     if (player != null)
                     {
-                        if (context.SaveChanges() > 0)
-                        {
-                            return player.coins;
-                        }
+                        return player.coins;
                     }
                 }
             }
