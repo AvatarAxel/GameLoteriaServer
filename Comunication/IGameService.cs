@@ -22,6 +22,10 @@ namespace Comunication
         void UpdateTotalPlayers(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void UpdateBetCoins(string username, string verificationCode);
+        void StartGame(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void BanPlayer(string verificationCode, string username);
+
     }
 
     [ServiceContract]
@@ -35,5 +39,9 @@ namespace Comunication
         void GoToPlay(bool status);
         [OperationContract(IsOneWay = true)]
         void UpdateBetCoinsResponse(int coins, int bet);
+        [OperationContract(IsOneWay = true)]
+        void GetListPlayer(List<string> PlayerLobby);
+        [OperationContract(IsOneWay = true)]
+        void BanPlayerResponse(bool status);
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Logic;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.ServiceModel.Channels;
 
 namespace Comunication
 {
@@ -46,7 +47,7 @@ namespace Comunication
                 };
                 players.Connection = OperationContext.Current;
                 ChatNew.PlayerDTOs.Add(players);
-                SendMessage("Join chat", username, codeVerification);
+                SendMessage("TXx02Ejgy03aPLbqJ/yr6g==", username, codeVerification);
 
             }
         }
@@ -71,7 +72,7 @@ namespace Comunication
                 });
                 task.Start();
             }
-        } 
+        }
         public void ExitChat(string userName, string codeVerification)
         {
             var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == codeVerification);
@@ -80,9 +81,9 @@ namespace Comunication
                 var player = ChatExisting.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
                 if (player != null)
                 {
-                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "Exit Chat");
+                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "vSwpaapgnALaPLbqJ/yr6g==");
                     ChatExisting.PlayerDTOs.Remove(player);
-                    SendMessage("Exited the chat", userName, codeVerification);
+                    SendMessage("NDujuDiTG6lKFB7H0TNLqg==", userName, codeVerification);
                 }
             }
         }
@@ -181,9 +182,50 @@ namespace Comunication
                     Username = username,
                 };
                 player.Connection = newConnection;
-                lobby.PlayerDTOs.Add(player);
-                UpdateTotalPlayers(verificationCode);
+                game.PlayerDTOs.Add(player);
+                newConnection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(game.PlayerDTOs.Count);
+                UpdateListPlayers(verificationCode);
             }
+        }
+
+       private void UpdateListPlayers(string verificationCode)
+       {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                Task task = new Task(() => {
+                    List<string> JoinedPlayer = new List<string>();
+                    JoinedPlayer = FillLists(verificationCode);
+
+                    for (int i = 0; i < game.PlayerDTOs.Count; i++)
+                    {
+                        try
+                        {
+                            game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GetListPlayer(JoinedPlayer);
+                        }
+                        catch (CommunicationObjectAbortedException)
+                        {
+                            game.PlayerDTOs.Remove(game.PlayerDTOs[i]);
+                        }
+                    }
+                });
+                task.Start();
+            }
+        }
+
+        private List<string> FillLists(string verificationCode)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            List<string> ListPlayers = new List<string>();
+            if (game != null)
+            {
+                for (int i=0; i<game.PlayerDTOs.Count; i++)
+                {
+                    ListPlayers.Add(game.PlayerDTOs[i].Username);
+                }
+                return ListPlayers;
+            }
+            return ListPlayers;
         }
 
         public void SendNextHostGame(string verificationCode)
@@ -281,6 +323,23 @@ namespace Comunication
             }
         }
 
+        public void BanPlayer(string verificationCode, string username)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                if (player != null)
+                {
+                    player.Connection.GetCallbackChannel<IGameServiceCallBack>().BanPlayerResponse(true);
+
+                    game.PlayerDTOs.Remove(player);
+                    ExitChat(username, verificationCode);
+
+                    UpdateListPlayers(verificationCode);
+                }
+            }
+        }
     }
 
     public partial class ServicesExposed : IJoinGameService
@@ -291,6 +350,21 @@ namespace Comunication
             if (lobby != null)
             {
                 return true;
+            }
+            return false;
+        }
+
+        public bool ResponseUsernameExist(string verificationCode, string username)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                if(player != null)
+                {
+                    return true;
+                }
+                return false;
             }
             return false;
         }

@@ -13,5 +13,7 @@ namespace Comunication
         bool ValidateCoinsUnregistered(int coins, string verificationCode);
         [OperationContract]
         bool ValidateCoinsRegistered(string username, string verificationCode);
+        [OperationContract]
+        bool ResponseUsernameExist(string verificationCode, string username);
     }
 }

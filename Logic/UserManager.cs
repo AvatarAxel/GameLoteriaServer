@@ -170,6 +170,24 @@ namespace Logic
             return false;
         }
 
+        /*public bool CheckNumberOfFriends(string email)
+        {
+            if(email != null)
+            {
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    var player = context.player.Where(x => x.email == email).FirstOrDefault();
+                    if (player != null)
+                    {
+                       
+                            return true;
+                        
+                    }
+                }
+            }
+            return false;
+        }*/
+
     }
 }
 

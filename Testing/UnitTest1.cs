@@ -224,7 +224,6 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        //OJITO
         [TestMethod]
         public void AuthenticationLogin_Successful()
         {
@@ -242,27 +241,6 @@ namespace Testing
 
             Assert.Equals(playerDTO, playerDTO1);
         }
-
-        [TestMethod]
-        public void AuthenticationLogin_Unuccessful()
-        {
-
-            PlayerDTO playerDTO = new PlayerDTO();
-            playerDTO.Birthday = DateTime.Now;
-            playerDTO.Coin = 500;
-            playerDTO.Email = "lupito987@gmail.com";
-            playerDTO.Username = "ElOsoLoco";
-            playerDTO.Password = "27262";
-
-            PlayerDTO playerDTO1 = new PlayerDTO();
-            playerDTO1.Username = "Ale";
-            playerDTO1.Password = "987";
-
-            UserManager userManagerTest = new UserManager();
-            playerDTO1 = userManagerTest.AuthenticationLogin(playerDTO1.Username, playerDTO1.Password);
-
-            Assert.Equals(playerDTO, playerDTO1);
-        }
-
+    
     }
 }
