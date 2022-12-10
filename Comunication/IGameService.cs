@@ -9,7 +9,7 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void JoinGame(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void ExitGame(string userName, string verificationCode);
+        void ExitGame(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
         void CreateGame(GameRoundDTO game);
         [OperationContract(IsOneWay = true)]
@@ -20,6 +20,8 @@ namespace Comunication
         void GoToGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void UpdateTotalPlayers(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void UpdateBetCoins(string username, string verificationCode);
     }
 
     [ServiceContract]
@@ -31,5 +33,7 @@ namespace Comunication
         void SendNextHostGameResponse(bool status);
         [OperationContract(IsOneWay = true)]
         void GoToPlay(bool status);
+        [OperationContract(IsOneWay = true)]
+        void UpdateBetCoinsResponse(int coins, int bet);
     }
 }

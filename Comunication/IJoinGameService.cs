@@ -10,6 +10,8 @@ namespace Comunication
         [OperationContract]
         bool ResponseCompleteLobby(string verificationCode);
         [OperationContract]
-        bool ValidateCoins(string username, string verificationCode);
+        bool ValidateCoinsUnregistered(int coins, string verificationCode);
+        [OperationContract]
+        bool ValidateCoinsRegistered(string username, string verificationCode);
     }
 }

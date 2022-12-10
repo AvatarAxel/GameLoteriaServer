@@ -149,10 +149,10 @@ namespace Comunication
 
         public void EliminateGame(string verificationCode)
         {
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
-                lobbyList.Remove(game);
+                lobbyList.Remove(lobby);
             }
         }
 
@@ -173,31 +173,37 @@ namespace Comunication
         public void JoinGame(string username, string verificationCode)
         {
             var newConnection = OperationContext.Current;
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
                 PlayerDTO player = new PlayerDTO()
                 {
                     Username = username,
                 };
                 player.Connection = newConnection;
-                game.PlayerDTOs.Add(player);
+                lobby.PlayerDTOs.Add(player);
                 UpdateTotalPlayers(verificationCode);
             }
         }
 
         public void SendNextHostGame(string verificationCode)
         {
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
-                //TODO "Change" foreach to "for"
-                foreach (PlayerDTO user in game.PlayerDTOs)
+                for (int i = 0; i < lobby.PlayerDTOs.Count; i++)
                 {
-                    if (!Regex.IsMatch(user.Username, "Invitado") && !Regex.IsMatch(user.Username, "Guest"))
+                    try
                     {
-                        user.Connection.GetCallbackChannel<IGameServiceCallBack>().SendNextHostGameResponse(true);
-                        return;
+                        if (!Regex.IsMatch(lobby.PlayerDTOs[i].Username, "Invitado") && !Regex.IsMatch(lobby.PlayerDTOs[i].Username, "Guest"))
+                        {
+                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().SendNextHostGameResponse(true);
+                            return;
+                        }
+                    }
+                    catch (CommunicationObjectAbortedException)
+                    {
+                        lobby.PlayerDTOs.Remove(lobby.PlayerDTOs[i]);
                     }
                 }
                 EliminateGame(verificationCode);
@@ -207,27 +213,27 @@ namespace Comunication
 
         public void GoToGame(string verificationCode)
         {
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
-                for (int i = 0; i < game.PlayerDTOs.Count; i++)
+                for (int i = 0; i < lobby.PlayerDTOs.Count; i++)
                 {
                     try
                     {
                         GameManager gameManager = new GameManager();
-                        int CoinOfPlayer = gameManager.GetCoins(game.PlayerDTOs[i].Username);
-                        if (CoinOfPlayer >= game.Bet)
+                        int CoinOfPlayer = gameManager.GetCoins(lobby.PlayerDTOs[i].Username);
+                        if (CoinOfPlayer >= lobby.Bet)
                         {
-                            game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
+                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
                         }
                         else
                         {
-                            game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(false);
+                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(false);
                         }
                     }
                     catch (CommunicationObjectAbortedException)
-                    { 
-                        game.PlayerDTOs.Remove(game.PlayerDTOs[i]);
+                    {
+                        lobby.PlayerDTOs.Remove(lobby.PlayerDTOs[i]);
                     }
                 }
             }
@@ -235,22 +241,54 @@ namespace Comunication
 
         public void UpdateTotalPlayers(string verificationCode)
         {
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
-                for (int i = 0; i < game.PlayerDTOs.Count; i++)
+                for (int i = 0; i < lobby.PlayerDTOs.Count; i++)
                 {
-                    game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(game.PlayerDTOs.Count);
+                    try
+                    {
+                        lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(lobby.PlayerDTOs.Count);
+                    }
+                    catch (CommunicationObjectAbortedException)
+                    {
+                        lobby.PlayerDTOs.Remove(lobby.PlayerDTOs[i]);
+                    }                    
                 }
             }
         }
+
+        public void UpdateBetCoins(string username, string verificationCode)
+        {
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                if (player != null)
+                {
+                    GameManager gameManager = new GameManager();
+                    int coins = gameManager.GetCoins(username);
+                    int bet = lobby.Bet;
+                    try
+                    {
+                        player.Connection.GetCallbackChannel<IGameServiceCallBack>().UpdateBetCoinsResponse(coins, bet);
+                    }
+                    catch(CommunicationObjectAbortedException)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
     }
+
     public partial class ServicesExposed : IJoinGameService
     {
         public bool ResponseCodeExist(string verificationCode)
         {
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
                 return true;
             }
@@ -259,10 +297,10 @@ namespace Comunication
 
         public bool ResponseCompleteLobby(string verificationCode)
         {
-            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
-                if (game.PlayerDTOs.Count >= game.LimitPlayer)
+                if (lobby.PlayerDTOs.Count >= lobby.LimitPlayer)
                 {
                     return true;
                 }
@@ -270,7 +308,7 @@ namespace Comunication
             return false;
         }
 
-        public bool ValidateCoins(string username, string verificationCode)
+        public bool ValidateCoinsRegistered(string username, string verificationCode)
         {
             var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             GameManager gameManager = new GameManager();
@@ -278,6 +316,20 @@ namespace Comunication
             {
                 if (gameManager.GetCoins(username) >= lobby.Bet)
                 { 
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool ValidateCoinsUnregistered(int coins, string verificationCode)
+        {
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            GameManager gameManager = new GameManager();
+            if (lobby != null)
+            {
+                if (coins >= lobby.Bet)
+                {
                     return true;
                 }
             }
