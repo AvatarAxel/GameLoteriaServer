@@ -14,5 +14,7 @@ namespace Comunication
         bool ResponseCodeExist(string verificationCode);
         [OperationContract]
         bool ResponseCompleteLobby(string verificationCode);
+        [OperationContract]
+        bool ResponseUsernameExist(string verificationCode, string username);
     }
 }

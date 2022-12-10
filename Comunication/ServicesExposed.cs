@@ -36,9 +36,9 @@ namespace Comunication
             lobbyChat.Add(gameRoundDTO);
         }
 
-        public void JoinChat(string username, string verificationCode)
+        public void JoinChat(string username, string codeVerification)
         {
-            var ChatNew = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var ChatNew = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == codeVerification);
             if (ChatNew != null)
             {
                 PlayerDTO players = new PlayerDTO()
@@ -47,14 +47,14 @@ namespace Comunication
                 };
                 players.Connection = OperationContext.Current;
                 ChatNew.PlayerDTOs.Add(players);
-                SendMessage("TXx02Ejgy03aPLbqJ/yr6g==", username, verificationCode);
+                SendMessage("TXx02Ejgy03aPLbqJ/yr6g==", username, codeVerification);
 
             }
         }
 
-        public void SendMessage(string message, string userChat, string verificationCode)
+        public void SendMessage(string message, string userChat, string codeVerification)
         {
-            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var ChatExisting = lobbyChat.FirstOrDefault(iteration => iteration.VerificationCode == codeVerification);
             if (ChatExisting != null)
             {
                 Task task = new Task(() => {
@@ -332,6 +332,21 @@ namespace Comunication
             if (game != null)
             {
                 return true;
+            }
+            return false;
+        }
+
+        public bool ResponseUsernameExist(string verificationCode, string username)
+        {
+            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (game != null)
+            {
+                var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                if(player != null)
+                {
+                    return true;
+                }
+                return false;
             }
             return false;
         }
