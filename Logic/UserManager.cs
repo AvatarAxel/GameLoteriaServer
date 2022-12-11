@@ -170,7 +170,7 @@ namespace Logic
             return false;
         }
 
-        /*public bool CheckNumberOfFriends(string email)
+        public int CheckNumberOfFriends(string email)
         {
             if(email != null)
             {
@@ -179,14 +179,13 @@ namespace Logic
                     var player = context.player.Where(x => x.email == email).FirstOrDefault();
                     if (player != null)
                     {
-                       
-                            return true;
-                        
+                        var list = context.friendList.Where(x => x.email == email).Count();
+                        return list;
                     }
                 }
             }
-            return false;
-        }*/
+            return 1;
+        }
 
     }
 }

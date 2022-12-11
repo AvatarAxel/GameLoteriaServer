@@ -195,7 +195,7 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void ReceiveEmail_Successful()
         {
             bool expectedResult = true;
@@ -208,7 +208,7 @@ namespace Testing
             actualResult = userManagerTest.ReceiveEmail(email, codeVerification);
 
             Assert.AreEqual(expectedResult, actualResult);
-        }*/
+        }
 
         [TestMethod]
         public void ChangePassword_Successful()
@@ -323,6 +323,20 @@ namespace Testing
             string username = "Ale16Pucheta";
 
             actualResult = gameManagerTest.GetCoins(username);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
+        public void CheckNumberOfFriends_Successful()
+        {
+            UserManager userManager = new UserManager();
+
+            int expectedResult = 0;
+            int actualResult;
+
+            string email = "aavp1603@hotmail.com";
+            actualResult = userManager.CheckNumberOfFriends(email);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
