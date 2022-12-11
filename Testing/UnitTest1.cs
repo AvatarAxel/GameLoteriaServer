@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Logic;
+using System.Collections.Generic;
 
 namespace Testing
 {
@@ -242,6 +243,57 @@ namespace Testing
 
             Assert.Equals(playerDTO, playerDTO1);
         }
-    
+
+        [TestMethod]
+        public void Betting_Successful()
+        {
+
+           GameManager gameManagerTest = new GameManager();
+
+            bool expectedResult = true;
+            bool actualResult;
+
+            string username = "Ale16Pucheta";
+            int bet = 500;
+
+            actualResult = gameManagerTest.Betting(username, bet);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
+        public void ReceiveCoinsEarned_Successful()
+        {
+
+            GameManager gameManagerTest = new GameManager();
+
+            bool expectedResult = true;
+            bool actualResult;
+
+            string username = "Ale16Pucheta";
+            int bet = 2300;
+
+            actualResult = gameManagerTest.ReceiveCoinsEarned(username, bet);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
+        public void GetCoins_Unsuccessful()
+        {
+
+            GameManager gameManagerTest = new GameManager();
+
+            int expectedResult = 2300;
+            int actualResult;
+
+            string username = "Ale16Pucheta";
+
+            actualResult = gameManagerTest.GetCoins(username);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+
     }
 }
