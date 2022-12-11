@@ -369,5 +369,7 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+            Assert.AreEqual(expectedResult, actualResult);
+        }
     }
 }

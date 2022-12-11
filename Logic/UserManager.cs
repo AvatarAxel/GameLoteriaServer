@@ -175,7 +175,7 @@ namespace Logic
 
         public int CheckNumberOfFriends(string email)
         {
-            if(email != null)
+            if (email != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {

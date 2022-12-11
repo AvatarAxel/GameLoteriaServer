@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IChangeUsernameService.cs" />
+    <Compile Include="IFriendListService.cs" />
     <Compile Include="IJoinGameService.cs" />
     <Compile Include="ILoteriaService.cs" />
     <Compile Include="ServicesExposed.cs" />
