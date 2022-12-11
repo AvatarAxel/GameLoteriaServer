@@ -19,5 +19,6 @@ namespace Logic
         [DataMember]
         public bool IsActive { get; set; }
         public OperationContext Connection { get; set; }
+        public OperationContext ConnectionFriend { get; set; }
     }
 }

@@ -178,8 +178,10 @@ namespace Logic
                 {
                     var player = context.player.Where(x => x.email == email).FirstOrDefault();
                     if (player != null)
-                    {
-                        return context.friendList.Where(x => x.idFriendList == email).Count();
+                    { 
+                        var counter = context.friendList.Where(x => x.idFriendList == email).Count();
+                        counter += context.friendList.Where(x => x.email == email).Count();
+                        return counter;
                     }
                 }
             }

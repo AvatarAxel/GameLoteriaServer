@@ -164,12 +164,12 @@ namespace Comunication
             }
         }
 
-        public void ExitGame(string userName, string verificationCode)
+        public void ExitGame(string username, string verificationCode)
         {
             var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
             {
-                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
+                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
                 if (player != null)
                 {
                     lobby.PlayerDTOs.Remove(player);
@@ -378,6 +378,10 @@ namespace Comunication
                 {
                     return true;
                 }
+                else
+                {
+                    return false;
+                }
             }
             return false;
         }
@@ -392,6 +396,10 @@ namespace Comunication
                 { 
                     return true;
                 }
+                else
+                {
+                    return false;
+                }
             }
             return false;
         }
@@ -404,6 +412,10 @@ namespace Comunication
                 if (coins >= lobby.Bet)
                 {
                     return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             return false;
@@ -469,7 +481,7 @@ namespace Comunication
             var newConnection = OperationContext.Current;
             var loteria = loteriaList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
-            if (loteria != null)
+            if (loteria != null && lobby != null)
             {
                 loteria.Bet = lobby.Bet;               
                 PlayerDTO player = new PlayerDTO()
@@ -545,6 +557,31 @@ namespace Comunication
         {
            UserManager userManager = new UserManager();
            return userManager.CheckNumberOfFriends(email);
+        }
+        public void SendInvitation(string verificationCode, string usernameSender, string usernameRecipient)
+        {
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == usernameRecipient);
+                if (player != null)
+                {
+                   player.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().ReciveInvitation(true, usernameSender);
+                }
+            }
+        }
+        public void JoinFriend(string verificationCode, string username)
+        {
+            var newConnection = OperationContext.Current;
+            var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == username);
+                if(player != null)
+                {
+                    player.ConnectionFriend = newConnection;
+                }
+            }
         }
     }
 }

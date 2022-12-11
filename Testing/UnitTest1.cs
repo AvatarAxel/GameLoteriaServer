@@ -333,7 +333,7 @@ namespace Testing
 
             UserManager userManagerTest = new UserManager();
 
-            int expectedResult = 1;
+            int expectedResult = 2;
             int actualResult;
 
             actualResult = userManagerTest.CheckNumberOfFriends("aavp1603@hotmail.com");
