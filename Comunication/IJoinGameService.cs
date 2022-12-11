@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ServiceModel;
 
 namespace Comunication
 {
@@ -14,6 +9,10 @@ namespace Comunication
         bool ResponseCodeExist(string verificationCode);
         [OperationContract]
         bool ResponseCompleteLobby(string verificationCode);
+        [OperationContract]
+        bool ValidateCoinsUnregistered(int coins, string verificationCode);
+        [OperationContract]
+        bool ValidateCoinsRegistered(string username, string verificationCode);
         [OperationContract]
         bool ResponseUsernameExist(string verificationCode, string username);
     }

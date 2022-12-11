@@ -1,11 +1,6 @@
 ﻿using Logic;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Comunication
 {
@@ -15,9 +10,7 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void JoinGame(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void SendWinner(string username, string verificationCode);
-        [OperationContract(IsOneWay = true)]
-        void ExitGame(string userName, string verificationCode);
+        void ExitGame(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
         void CreateGame(GameRoundDTO game);
         [OperationContract(IsOneWay = true)]
@@ -27,7 +20,9 @@ namespace Comunication
         [OperationContract(IsOneWay = true)]
         void GoToGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
-        void StartGame(string verificationCode);
+        void UpdateTotalPlayers(string verificationCode);
+        [OperationContract(IsOneWay = true)]
+        void UpdateBetCoins(string username, string verificationCode);
         [OperationContract(IsOneWay = true)]
         void BanPlayer(string verificationCode, string username);
 
@@ -37,15 +32,13 @@ namespace Comunication
     public interface IGameServiceCallBack
     {
         [OperationContract(IsOneWay = true)]
-        void ReciveWinner(string username);
-        [OperationContract(IsOneWay = true)]
         void ResponseTotalPlayers(int totalPlayers);
         [OperationContract(IsOneWay = true)]
         void SendNextHostGameResponse(bool status);
         [OperationContract(IsOneWay = true)]
-        void SendCard(int idCard);
-        [OperationContract(IsOneWay = true)]
         void GoToPlay(bool status);
+        [OperationContract(IsOneWay = true)]
+        void UpdateBetCoinsResponse(int coins, int bet);
         [OperationContract(IsOneWay = true)]
         void GetListPlayer(List<string> PlayerLobby);
         [OperationContract(IsOneWay = true)]

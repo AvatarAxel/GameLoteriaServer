@@ -1,0 +1,9 @@
+﻿C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\friendList.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\player.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\Properties\AssemblyInfo.cs
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\GameModel.Context.tt
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\GameModel.tt
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\GameModel.edmx
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\App.config
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\GameModel.edmx.diagram
+C:\Users\michi\OneDrive\Escritorio\Proyecto\GameLoteriaServer\Data\packages.config

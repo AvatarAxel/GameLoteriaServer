@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Net;
 using System.Text;
@@ -11,9 +9,9 @@ using System.Data.Entity.ModelConfiguration.Configuration;
 
 namespace Logic
 {
-     public class EmailStructure
+    public class EmailStructure
     {
-        public bool sendMail(string emailPlayers, string subject, string body)
+        public bool SendMail(string emailPlayers, string subject, string body)
         {            
 
             string displayName = "Game Loteria";

@@ -56,6 +56,9 @@
       <Key>S2340</Key>
     </Rule>
     <Rule>
+      <Key>S1134</Key>
+    </Rule>
+    <Rule>
       <Key>S2342</Key>
       <Parameters>
         <Parameter>
@@ -91,6 +94,12 @@
     </Rule>
     <Rule>
       <Key>S6146</Key>
+    </Rule>
+    <Rule>
+      <Key>S1656</Key>
+    </Rule>
+    <Rule>
+      <Key>S2349</Key>
     </Rule>
     <Rule>
       <Key>S907</Key>
@@ -201,6 +210,10 @@
         <Parameter>
           <Key>propertyThreshold</Key>
           <Value>3</Value>
+        </Parameter>
+        <Parameter>
+          <Key>threshold</Key>
+          <Value>15</Value>
         </Parameter>
       </Parameters>
     </Rule>

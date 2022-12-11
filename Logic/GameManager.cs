@@ -19,8 +19,7 @@ namespace Logic
                     var player = context.player.Where(x => x.username == username).FirstOrDefault();
                     if (player != null)
                     {
-                        if (player.coins >= bet)
-                        {
+                        if (player.coins >= bet) {
                             player.coins = player.coins - bet;
                             if (context.SaveChanges() > 0)
                             {
@@ -54,7 +53,7 @@ namespace Logic
             return false;
         }
 
-        public int GetCoins(string username)
+        public int GetCoins (string username)
         {
             ValidateData validate = new ValidateData();
             if (validate.ValidationUsernameFormat(username))
@@ -70,5 +69,7 @@ namespace Logic
             }
             return 0;
         }
+
+
     }
 }
