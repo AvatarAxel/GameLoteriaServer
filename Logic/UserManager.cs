@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
-
+using System.Security.Cryptography.X509Certificates;
 
 namespace Logic
 {
@@ -189,23 +189,22 @@ namespace Logic
             return 0;
         }
 
-        public bool AddFriend(string email, string emailNewFriend)
+        public bool AddFriend(string userEmail, string emailNewFriend)
         {
-            if (email != null && emailNewFriend != null)
+            if (userEmail != null && emailNewFriend != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
-                    var player = context.player.Where(x => x.email == email).FirstOrDefault();
-                    if (player != null)
+                    var player = context.player.Where(x => x.email == userEmail).FirstOrDefault();
+                    var newFriend = context.player.Where(x => x.email == emailNewFriend).FirstOrDefault();
+                    if (player != null && newFriend != null)
                     {
-                        var algo = context.friendList.Where(x => x.idFriendList == email);
-                        //algo.Aggregate(emailNewFriend, (a, b) => a + b);
-                        List<string> newFriends = new List<string>();
-                        newFriends.Add(email);
-                        newFriends.Add(emailNewFriend);
-                        //context.friendList.Add(newFriends);
-                        //context.friendList.
-                        return true;
+                        context.friendList.Add(new friendList() {idFriendList = userEmail, email = emailNewFriend });
+                        var result = context.SaveChanges();
+                        if (result > 0)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

@@ -31,8 +31,8 @@ namespace Testing
         [TestMethod]
         public void RegisterUserRepeat_Unsuccessful()
         {
-            bool expectedResult = false; //Esperamos que sea verdadero la prueba
-            bool actualResult; //GUardar lo que me trae el metodo
+            bool expectedResult = false;
+            bool actualResult;
                                
             PlayerDTO playerDTO = new PlayerDTO();
             playerDTO.Birthday = DateTime.Now;
@@ -364,10 +364,7 @@ namespace Testing
             bool expectedResult = true;
             bool actualResult;
 
-            actualResult = userManagerTest.AddFriend("JuguitoDeUva@protonmail.com", "gusanito@gmail.com");
-
-            Assert.AreEqual(expectedResult, actualResult);
-        }
+            actualResult = userManagerTest.AddFriend("zs20015691@estudiantes.uv.mx", "JuguitoDeUva@protonmail.com");
 
             Assert.AreEqual(expectedResult, actualResult);
         }
