@@ -47,7 +47,7 @@ namespace Comunication
                 };
                 players.Connection = OperationContext.Current;
                 ChatNew.PlayerDTOs.Add(players);
-                SendMessage("TXx02Ejgy03aPLbqJ/yr6g==", username, codeVerification);
+                SendMessage("5LZeiaQhisJTcSymht+N0g==", username, codeVerification);
 
             }
         }
@@ -81,9 +81,9 @@ namespace Comunication
                 var player = ChatExisting.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == userName);
                 if (player != null)
                 {
-                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "vSwpaapgnALaPLbqJ/yr6g==");
+                    player.Connection.GetCallbackChannel<IChatServiceCallBack>().ReciveMessage(player.Username, "PNKUFze2Vj1TcSymht+N0g==");
                     ChatExisting.PlayerDTOs.Remove(player);
-                    SendMessage("NDujuDiTG6lKFB7H0TNLqg==", userName, codeVerification);
+                    SendMessage("/uGJ5xEiPWAmdMehHsOkpQ==", userName, codeVerification);
                 }
             }
         }
@@ -102,6 +102,13 @@ namespace Comunication
         {
             UserManager userManager = new UserManager();
             bool status = userManager.ChangePassword(email, password);
+            return status;
+        }
+
+        public bool ExistEmail(string email)
+        {
+            UserManager userManager = new UserManager();
+            bool status = userManager.ValidationEmail(email);
             return status;
         }
     }

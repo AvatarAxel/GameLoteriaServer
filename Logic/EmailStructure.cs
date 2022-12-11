@@ -16,9 +16,6 @@ namespace Logic
         public bool sendMail(string emailPlayers, string subject, string body)
         {            
 
-            //string EMAIL = ConfigurationManager.AppSettings["EMAIL"]; ----> Manda NULL
-            //string PASSWORD = ConfigurationManager.AppSettings["PASSWORD"];
-
             string displayName = "Game Loteria";
 
             MailMessage mail = new MailMessage();

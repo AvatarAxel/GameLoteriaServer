@@ -50,7 +50,7 @@ namespace Logic
                         return true;
                     }
                     return false;
-                };
+                }
             }
             return false;
         }

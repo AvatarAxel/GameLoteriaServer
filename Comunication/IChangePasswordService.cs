@@ -12,5 +12,7 @@ namespace Comunication
     {
         [OperationContract]
         bool ChangePassword(string email, string password);
+        [OperationContract]
+        bool ExistEmail(string email);
     }
 }
