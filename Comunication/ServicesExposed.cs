@@ -583,5 +583,30 @@ namespace Comunication
                 }
             }
         }
+
+        public void AddFriends(string emailSender, string usernameDesti, string verificationCode)
+        {
+            UserManager userManager = new UserManager();
+            if(emailSender != null && usernameDesti != null)
+            {
+                var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
+                if (lobby != null)
+                {
+                    var playerSender = lobby.PlayerDTOs.FirstOrDefault(i => i.Email == emailSender);
+                    var playerRemitent = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == usernameDesti);
+                    if (playerSender != null && playerRemitent != null)
+                    {
+                        bool status = userManager.AddFriend(emailSender, playerRemitent.Email);
+                        if (status)
+                        {
+                            playerSender.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().AddFriendResponse(true);
+                            playerRemitent.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().AddFriendResponse(true);
+                        }
+                    }
+                }
+
+            }
+        }
+
     }
 }

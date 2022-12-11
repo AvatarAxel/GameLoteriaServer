@@ -12,6 +12,8 @@ namespace Comunication
         void SendInvitation(string verificationCode, string usernameSender, string usernameRecipient);
         [OperationContract]
         void JoinFriend(string verificationCode, string username);
+        [OperationContract]
+        void AddFriends(string userEmail, string emailNewFriend, string verificationCode);
     }
 
     [ServiceContract]
@@ -19,5 +21,8 @@ namespace Comunication
     {
         [OperationContract(IsOneWay = true)]
         void ReciveInvitation(bool status, string usernameSender);
+
+        [OperationContract(IsOneWay = true)]
+        void AddFriendResponse(bool status);
     }
 }
