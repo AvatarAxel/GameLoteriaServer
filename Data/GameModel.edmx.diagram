@@ -4,8 +4,8 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="9c5dbc242b5643e9b55298d1d226e81d" Name="Diagram1">
-        <EntityTypeShape EntityType="GameLoteriaDataBasesModel.friendList" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
+      <Diagram DiagramId="ca3744148d174ebdace6698c12a1e642" Name="Diagram1">
+        <EntityTypeShape EntityType="GameLoteriaDataBasesModel.friendList" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="GameLoteriaDataBasesModel.player" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="GameLoteriaDataBasesModel.FK_friendList_email" ManuallyRouted="false" />
       </Diagram>
