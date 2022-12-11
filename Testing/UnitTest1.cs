@@ -261,6 +261,23 @@ namespace Testing
         }
 
         [TestMethod]
+        public void Betting_Unsuccessful()
+        {
+
+            GameManager gameManagerTest = new GameManager();
+
+            bool expectedResult = false;
+            bool actualResult;
+
+            string username = "Ale16Pucheta";
+            int bet = 3000;
+
+            actualResult = gameManagerTest.Betting(username, bet);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
         public void ReceiveCoinsEarned_Successful()
         {
 
@@ -278,7 +295,24 @@ namespace Testing
         }
 
         [TestMethod]
-        public void GetCoins_Unsuccessful()
+        public void ReceiveCoinsEarned_Unsuccessful()
+        {
+
+            GameManager gameManagerTest = new GameManager();
+
+            bool expectedResult = false;
+            bool actualResult;
+
+            string username = "Ale16Pucheta";
+            int bet = -20;
+
+            actualResult = gameManagerTest.ReceiveCoinsEarned(username, bet);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
+        public void GetCoins_Successful()
         {
 
             GameManager gameManagerTest = new GameManager();
@@ -292,7 +326,5 @@ namespace Testing
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-
-
     }
 }

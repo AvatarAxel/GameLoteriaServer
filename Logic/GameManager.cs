@@ -35,7 +35,7 @@ namespace Logic
         public bool ReceiveCoinsEarned(string username, int totalCoins)
         {
             ValidateData validate = new ValidateData();
-            if (validate.ValidationUsernameFormat(username))
+            if (validate.ValidationUsernameFormat(username) && totalCoins > 0)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
