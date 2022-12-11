@@ -539,5 +539,12 @@ namespace Comunication
             }
         }
     }
-
+    public partial class ServicesExposed : IFriendListService
+    {
+        public int CheckNumberFriends(string email)
+        {
+           UserManager userManager = new UserManager();
+           return userManager.CheckNumberOfFriends(email);
+        }
+    }
 }

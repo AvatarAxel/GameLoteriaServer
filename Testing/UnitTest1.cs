@@ -328,15 +328,15 @@ namespace Testing
         }
 
         [TestMethod]
-        public void CheckNumberOfFriends_Successful()
+        public void GetFriendList_Unccessful()
         {
-            UserManager userManager = new UserManager();
 
-            int expectedResult = 0;
+            UserManager userManagerTest = new UserManager();
+
+            int expectedResult = 1;
             int actualResult;
 
-            string email = "aavp1603@hotmail.com";
-            actualResult = userManager.CheckNumberOfFriends(email);
+            actualResult = userManagerTest.CheckNumberOfFriends("aavp1603@hotmail.com");
 
             Assert.AreEqual(expectedResult, actualResult);
         }

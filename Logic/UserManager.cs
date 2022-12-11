@@ -172,19 +172,18 @@ namespace Logic
 
         public int CheckNumberOfFriends(string email)
         {
-            if(email != null)
+            if (email != null)
             {
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
                     var player = context.player.Where(x => x.email == email).FirstOrDefault();
                     if (player != null)
                     {
-                        var list = context.friendList.Where(x => x.email == email).Count();
-                        return list;
+                        return context.friendList.Where(x => x.idFriendList == email).Count();
                     }
                 }
             }
-            return 1;
+            return 0;
         }
 
     }
