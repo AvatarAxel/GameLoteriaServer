@@ -11,7 +11,7 @@ namespace Logic
 {
     public class EmailStructure
     {
-        public bool sendMail(string emailPlayers, string subject, string body)
+        public bool SendMail(string emailPlayers, string subject, string body)
         {            
 
             //string EMAIL = ConfigurationManager.AppSettings["EMAIL"]; ----> Manda NULL

@@ -1,4 +1,5 @@
 ﻿using Logic;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace Comunication
@@ -22,7 +23,6 @@ namespace Comunication
         void UpdateTotalPlayers(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void UpdateBetCoins(string username, string verificationCode);
-        void StartGame(string verificationCode);
         [OperationContract(IsOneWay = true)]
         void BanPlayer(string verificationCode, string username);
 

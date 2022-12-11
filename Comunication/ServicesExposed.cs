@@ -166,6 +166,7 @@ namespace Comunication
                 if (player != null)
                 {
                     lobby.PlayerDTOs.Remove(player);
+                    UpdateListPlayers(verificationCode);
                     UpdateTotalPlayers(verificationCode);
                 }
             }
@@ -182,30 +183,30 @@ namespace Comunication
                     Username = username,
                 };
                 player.Connection = newConnection;
-                game.PlayerDTOs.Add(player);
-                newConnection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(game.PlayerDTOs.Count);
+                lobby.PlayerDTOs.Add(player);                
                 UpdateListPlayers(verificationCode);
             }
         }
 
        private void UpdateListPlayers(string verificationCode)
        {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
                 Task task = new Task(() => {
                     List<string> JoinedPlayer = new List<string>();
                     JoinedPlayer = FillLists(verificationCode);
 
-                    for (int i = 0; i < game.PlayerDTOs.Count; i++)
+                    for (int i = 0; i < lobby.PlayerDTOs.Count; i++)
                     {
                         try
                         {
-                            game.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GetListPlayer(JoinedPlayer);
+                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().ResponseTotalPlayers(lobby.PlayerDTOs.Count);
+                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GetListPlayer(JoinedPlayer);
                         }
                         catch (CommunicationObjectAbortedException)
                         {
-                            game.PlayerDTOs.Remove(game.PlayerDTOs[i]);
+                            lobby.PlayerDTOs.Remove(lobby.PlayerDTOs[i]);
                         }
                     }
                 });
@@ -215,13 +216,13 @@ namespace Comunication
 
         private List<string> FillLists(string verificationCode)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             List<string> ListPlayers = new List<string>();
-            if (game != null)
+            if (lobby != null)
             {
-                for (int i=0; i<game.PlayerDTOs.Count; i++)
+                for (int i=0; i< lobby.PlayerDTOs.Count; i++)
                 {
-                    ListPlayers.Add(game.PlayerDTOs[i].Username);
+                    ListPlayers.Add(lobby.PlayerDTOs[i].Username);
                 }
                 return ListPlayers;
             }
@@ -257,21 +258,13 @@ namespace Comunication
         {
             var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (lobby != null)
-            {
+            {                
                 for (int i = 0; i < lobby.PlayerDTOs.Count; i++)
                 {
                     try
                     {
-                        GameManager gameManager = new GameManager();
-                        int CoinOfPlayer = gameManager.GetCoins(lobby.PlayerDTOs[i].Username);
-                        if (CoinOfPlayer >= lobby.Bet)
-                        {
-                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
-                        }
-                        else
-                        {
-                            lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(false);
-                        }
+                        UpdateBetCoins(lobby.PlayerDTOs[i].Username, verificationCode);
+                        lobby.PlayerDTOs[i].Connection.GetCallbackChannel<IGameServiceCallBack>().GoToPlay(true);
                     }
                     catch (CommunicationObjectAbortedException)
                     {
@@ -325,7 +318,7 @@ namespace Comunication
 
         public void BanPlayer(string verificationCode, string username)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            var game = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
             if (game != null)
             {
                 var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
@@ -356,10 +349,10 @@ namespace Comunication
 
         public bool ResponseUsernameExist(string verificationCode, string username)
         {
-            var game = gameRoundDTOs.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (game != null)
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
             {
-                var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
+                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
                 if(player != null)
                 {
                     return true;
@@ -399,7 +392,6 @@ namespace Comunication
         public bool ValidateCoinsUnregistered(int coins, string verificationCode)
         {
             var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            GameManager gameManager = new GameManager();
             if (lobby != null)
             {
                 if (coins >= lobby.Bet)
@@ -473,16 +465,14 @@ namespace Comunication
             if (loteria != null)
             {
                 loteria.Bet = lobby.Bet;               
-                GameManager gameManager = new GameManager();            
-                if(gameManager.Betting(username, loteria.Bet))
+                PlayerDTO player = new PlayerDTO()
                 {
-                    PlayerDTO player = new PlayerDTO()
-                    {
-                        Username = username,
-                    };
-                    player.Connection = newConnection;
-                    loteria.PlayerDTOs.Add(player);
-                }
+                    Username = username,
+                };
+                GameManager gameManager = new GameManager();
+                gameManager.Betting(username, loteria.Bet);
+                player.Connection = newConnection;
+                loteria.PlayerDTOs.Add(player);
             }
         }
 
