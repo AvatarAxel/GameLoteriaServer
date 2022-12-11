@@ -195,7 +195,7 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void ReceiveEmail_Successful()
         {
             bool expectedResult = true;
@@ -208,7 +208,7 @@ namespace Testing
             actualResult = userManagerTest.ReceiveEmail(email, codeVerification);
 
             Assert.AreEqual(expectedResult, actualResult);
-        }*/
+        }
 
         [TestMethod]
         public void ChangePassword_Successful()
@@ -326,5 +326,7 @@ namespace Testing
 
             Assert.AreEqual(expectedResult, actualResult);
         }
+
+
     }
 }

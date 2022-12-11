@@ -7,9 +7,10 @@
       <Schema Namespace="GameLoteriaDataBasesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="friendList">
           <Key>
-            <PropertyRef Name="idFriendList" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="idFriendList" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idFriendList" Type="nvarchar" MaxLength="225" Nullable="false" />
           <Property Name="email" Type="nvarchar" MaxLength="225" Nullable="false" />
         </EntityType>
         <EntityType Name="player">
@@ -17,7 +18,7 @@
             <PropertyRef Name="email" />
           </Key>
           <Property Name="email" Type="nvarchar" MaxLength="225" Nullable="false" />
-          <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="70" Nullable="false" />
           <Property Name="birthday" Type="date" Nullable="false" />
           <Property Name="coins" Type="int" Nullable="false" />
           <Property Name="username" Type="nvarchar" MaxLength="20" Nullable="false" />
@@ -49,9 +50,10 @@
       <Schema Namespace="GameLoteriaDataBasesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="friendList">
           <Key>
-            <PropertyRef Name="idFriendList" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="idFriendList" Type="String" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idFriendList" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="email" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="player" Relationship="Self.FK_friendList_email" FromRole="friendList" ToRole="player" />
         </EntityType>
@@ -95,6 +97,7 @@
           <EntitySetMapping Name="friendList">
             <EntityTypeMapping TypeName="GameLoteriaDataBasesModel.friendList">
               <MappingFragment StoreEntitySet="friendList">
+                <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="idFriendList" ColumnName="idFriendList" />
                 <ScalarProperty Name="email" ColumnName="email" />
               </MappingFragment>
