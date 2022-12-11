@@ -51,7 +51,7 @@
           <Key>
             <PropertyRef Name="idFriendList" />
           </Key>
-          <Property Name="idFriendList" Type="Int32" Nullable="false" />
+          <Property Name="idFriendList" Type="String" Nullable="false" />
           <Property Name="email" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="player" Relationship="Self.FK_friendList_email" FromRole="friendList" ToRole="player" />
         </EntityType>

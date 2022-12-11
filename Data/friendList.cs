@@ -14,7 +14,7 @@ namespace Data
     
     public partial class friendList
     {
-        public int idFriendList { get; set; }
+        public string idFriendList { get; set; }
         public string email { get; set; }
     
         public virtual player player { get; set; }
