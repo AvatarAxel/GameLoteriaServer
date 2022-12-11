@@ -1,5 +1,7 @@
 ﻿using Data;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 
@@ -185,6 +187,29 @@ namespace Logic
                 }
             }
             return 0;
+        }
+
+        public bool AddFriend(string email, string emailNewFriend)
+        {
+            if (email != null && emailNewFriend != null)
+            {
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    var player = context.player.Where(x => x.email == email).FirstOrDefault();
+                    if (player != null)
+                    {
+                        var algo = context.friendList.Where(x => x.idFriendList == email);
+                        //algo.Aggregate(emailNewFriend, (a, b) => a + b);
+                        List<string> newFriends = new List<string>();
+                        newFriends.Add(email);
+                        newFriends.Add(emailNewFriend);
+                        //context.friendList.Add(newFriends);
+                        //context.friendList.
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
     }

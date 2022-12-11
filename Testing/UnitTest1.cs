@@ -355,5 +355,19 @@ namespace Testing
             Assert.AreNotEqual(expectedResult, actualResult);
         }
 
+        [TestMethod]
+        public void AddFriend_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            bool expectedResult = true;
+            bool actualResult;
+
+            actualResult = userManagerTest.AddFriend("JuguitoDeUva@protonmail.com", "gusanito@gmail.com");
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
     }
 }
