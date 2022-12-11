@@ -31,8 +31,8 @@ namespace Testing
         [TestMethod]
         public void RegisterUserRepeat_Unsuccessful()
         {
-            bool expectedResult = false; //Esperamos que sea verdadero la prueba
-            bool actualResult; //GUardar lo que me trae el metodo
+            bool expectedResult = false;
+            bool actualResult;
                                
             PlayerDTO playerDTO = new PlayerDTO();
             playerDTO.Birthday = DateTime.Now;
@@ -328,6 +328,20 @@ namespace Testing
         }
 
         [TestMethod]
+        public void GetFriendList_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            int expectedResult = 4;
+            int actualResult;
+
+            actualResult = userManagerTest.CheckNumberOfFriends("JuguitoDeUva@protonmail.com");
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
         public void GetFriendList_Unccessful()
         {
 
@@ -336,7 +350,21 @@ namespace Testing
             int expectedResult = 2;
             int actualResult;
 
-            actualResult = userManagerTest.CheckNumberOfFriends("aavp1603@hotmail.com");
+            actualResult = userManagerTest.CheckNumberOfFriends("JuguitoDeUva@protonmail.com");
+            
+            Assert.AreNotEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
+        public void AddFriend_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            bool expectedResult = true;
+            bool actualResult;
+
+            actualResult = userManagerTest.AddFriend("zs20015691@estudiantes.uv.mx", "JuguitoDeUva@protonmail.com");
 
             Assert.AreEqual(expectedResult, actualResult);
         }
