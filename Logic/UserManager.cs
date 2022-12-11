@@ -1,5 +1,6 @@
 ﻿using Data;
 using System;
+using System.ComponentModel.Design;
 using System.Linq;
 
 
@@ -179,7 +180,7 @@ namespace Logic
                     var player = context.player.Where(x => x.email == email).FirstOrDefault();
                     if (player != null)
                     {
-                        return player.friendList.Count;                                                    
+                        return context.friendList.Where(x => x.idFriendList == email).Count();                                       
                     }
                 }
             }

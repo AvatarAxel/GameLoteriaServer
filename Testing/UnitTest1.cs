@@ -327,6 +327,33 @@ namespace Testing
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        [TestMethod]
+        public void GetFriendList_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            int expectedResult = 4;
+            int actualResult;
+
+            actualResult = userManagerTest.CheckNumberOfFriends("JuguitoDeUva@protonmail.com");
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
+        public void GetFriendList_Unccessful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            int expectedResult = 2;
+            int actualResult;
+
+            actualResult = userManagerTest.CheckNumberOfFriends("JuguitoDeUva@protonmail.com");
+            
+            Assert.AreNotEqual(expectedResult, actualResult);
+        }
 
     }
 }
