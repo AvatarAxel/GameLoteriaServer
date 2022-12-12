@@ -317,7 +317,7 @@ namespace Comunication
                     }
                     catch(CommunicationObjectAbortedException)
                     {
-                        return;
+                        lobby.PlayerDTOs.Remove(player);
                     }
                 }
             }

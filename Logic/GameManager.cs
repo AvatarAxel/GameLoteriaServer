@@ -17,14 +17,12 @@ namespace Logic
                 using (var context = new GameLoteriaDataBasesEntities())
                 {
                     var player = context.player.Where(x => x.username == username).FirstOrDefault();
-                    if (player != null)
+                    if (player != null && player.coins >= bet)
                     {
-                        if (player.coins >= bet) {
-                            player.coins = player.coins - bet;
-                            if (context.SaveChanges() > 0)
-                            {
-                                return true;
-                            }
+                        player.coins = player.coins - bet;
+                        if (context.SaveChanges() > 0)
+                        {
+                            return true;
                         }
                     }
                 }
