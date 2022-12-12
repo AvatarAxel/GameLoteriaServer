@@ -331,12 +331,19 @@ namespace Comunication
                 var player = game.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == username);
                 if (player != null)
                 {
-                    player.Connection.GetCallbackChannel<IGameServiceCallBack>().BanPlayerResponse(true);
+                    try
+                    {
+                        player.Connection.GetCallbackChannel<IGameServiceCallBack>().BanPlayerResponse(true);
+                        game.PlayerDTOs.Remove(player);
+                        ExitChat(username, verificationCode);
 
-                    game.PlayerDTOs.Remove(player);
-                    ExitChat(username, verificationCode);
-
-                    UpdateListPlayers(verificationCode);
+                        UpdateListPlayers(verificationCode);
+                    }
+                    catch (CommunicationObjectAbortedException) 
+                    {
+                        game.PlayerDTOs.Remove(player);
+                        ExitChat(username, verificationCode);
+                    }
                 }
             }
         }
@@ -558,6 +565,18 @@ namespace Comunication
            UserManager userManager = new UserManager();
            return userManager.CheckNumberOfFriends(email);
         }
+        public void SendInvitation(string verificationCode, string usernameSender, string usernameDestiner)
+        {
+            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == usernameDestiner);
+                if (player != null)
+                {
+                   player.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().ReciveInvitation(true, usernameSender);
+                }
+            }
+        }
         public void JoinFriend(string verificationCode, string username)
         {
             var newConnection = OperationContext.Current;
@@ -565,48 +584,51 @@ namespace Comunication
             if (lobby != null)
             {
                 var player = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == username);
-                if (player != null)
+                if(player != null)
                 {
                     player.ConnectionFriend = newConnection;
                 }
             }
         }
 
-        public void SendInvitation(string verificationCode, string usernameSender, string usernameRecipient)
-        {
-            var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
-            if (lobby != null)
-            {
-                var player = lobby.PlayerDTOs.FirstOrDefault(iteration => iteration.Username == usernameRecipient);
-                if (player != null)
-                {
-                   player.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().ReciveInvitation(true, usernameSender);
-                }
-            }
-        }
-
-        public void AddFriends(string emailSender, string usernameDesti, string verificationCode)
+        public void AddFriends(string usernameSender, string usernameDestiner, string verificationCode)
         {
             UserManager userManager = new UserManager();
-            if(emailSender != null && usernameDesti != null)
+            if(usernameSender != null && usernameDestiner != null)
             {
                 var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
                 if (lobby != null)
                 {
-                    var playerSender = lobby.PlayerDTOs.FirstOrDefault(i => i.Email == emailSender);
-                    var playerRemitent = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == usernameDesti);
-                    if (playerSender != null && playerRemitent != null)
+                    var playerSender = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == usernameSender);
+                    var playerDestiner = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == usernameDestiner);
+                    if (playerSender != null && playerDestiner != null)
                     {
-                        bool status = userManager.AddFriend(emailSender, playerRemitent.Email);
-                        if (status)
+                        bool status01 = userManager.AddFriend(usernameSender, usernameDestiner);
+                        bool status02 = userManager.AddFriend(usernameDestiner, usernameSender);
+                        if (status01 && status02)
                         {
                             playerSender.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().AddFriendResponse(true);
-                            playerRemitent.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().AddFriendResponse(true);
+                            playerDestiner.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().AddFriendResponse(true);
                         }
                     }
                 }
 
             }
+        }
+
+        public bool VerificationAreFriends(string usernameSender, string usernameDestiner)
+        {
+            UserManager userManager = new UserManager();
+            if (usernameSender != null && usernameDestiner != null)
+            {
+                bool status01 = userManager.AreFriends(usernameSender, usernameDestiner);
+                bool status02 = userManager.AreFriends(usernameDestiner, usernameSender);
+                if (status01 && status02)                 
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }

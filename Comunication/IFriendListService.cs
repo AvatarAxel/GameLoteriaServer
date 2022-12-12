@@ -7,13 +7,15 @@ namespace Comunication
     public interface IFriendListService
     {
         [OperationContract]
+        bool VerificationAreFriends(string usernameSender, string usernameDestiner);
+        [OperationContract]
         int CheckNumberFriends(string email);
         [OperationContract(IsOneWay = true)]
         void SendInvitation(string verificationCode, string usernameSender, string usernameRecipient);
         [OperationContract(IsOneWay = true)]
         void JoinFriend(string verificationCode, string username);
         [OperationContract(IsOneWay = true)]
-        void AddFriends(string userEmail, string emailNewFriend, string verificationCode);
+        void AddFriends(string usernameSender, string usernameDestination, string verificationCode);
     }
 
     [ServiceContract]
