@@ -368,5 +368,19 @@ namespace Testing
 
             Assert.AreEqual(expectedResult, actualResult);
         }
+
+        [TestMethod]
+        public void AreFriend_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            bool expectedResult = true;
+            bool actualResult;
+
+            actualResult = userManagerTest.AreFriends("GatoDeMonte", "Axelowo");
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
     }
 }
