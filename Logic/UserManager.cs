@@ -213,6 +213,33 @@ namespace Logic
             return false;
         }
 
+        public bool EliminateFriend(string usernamePlayer, string usernameFriend)
+        {
+            if (usernamePlayer != null && usernameFriend != null)
+            {
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    var playerSender = context.player.Where(x => x.username == usernamePlayer).FirstOrDefault();
+                    var playerDestiner = context.player.Where(x => x.username == usernameFriend).FirstOrDefault();
+                    if (playerSender != null && playerDestiner != null)
+                    {
+                        var player = context.friendList.Add(new friendList() { idFriendList = playerSender.email, email = playerDestiner.email });
+                        context.friendList.Remove(player);
+
+                        var result= context.SaveChanges();
+
+                        if(result > 0)
+                        {
+                            return true;
+                        }
+                            
+                        
+                    }
+                }
+            }
+            return false;
+        }
+
         public bool AreFriends(string usernameSender, string usernameDestiner)
         {
             if (usernameSender != null && usernameDestiner != null)
@@ -233,6 +260,8 @@ namespace Logic
             }
             return false;
         }
+
+
 
 
     }

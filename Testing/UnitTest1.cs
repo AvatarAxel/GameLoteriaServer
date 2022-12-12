@@ -382,5 +382,19 @@ namespace Testing
 
             Assert.AreEqual(expectedResult, actualResult);
         }
+
+        [TestMethod]
+        public void EliminateFriend_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            bool expectedResult = true;
+            bool actualResult;
+
+            actualResult = userManagerTest.EliminateFriend("Ale16Pucheta", "Chester");
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
     }
 }
