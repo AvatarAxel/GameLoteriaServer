@@ -382,5 +382,28 @@ namespace Testing
 
             Assert.AreEqual(expectedResult, actualResult);
         }
+
+        [TestMethod]
+        public void GetFriendListDataBases_Successful()
+        {
+
+            UserManager userManagerTest = new UserManager();
+
+            List<PlayerDTO> friendList = new List<PlayerDTO>();
+            PlayerDTO player01 = new PlayerDTO() { Email = "JuguitoDeUva@protonmail.com" };
+            PlayerDTO player02 = new PlayerDTO() { Email = "JuguitoDeUva@protonmail.com" };
+            PlayerDTO player03 = new PlayerDTO() { Email = "JuguitoDeUva@protonmail.com" };
+
+            friendList.Add(player01);
+            friendList.Add(player02);
+            friendList.Add(player03);
+
+            List<PlayerDTO> expectedResult = friendList;
+            List<PlayerDTO> actualResult;
+
+            actualResult = userManagerTest.GetFriendListDataBases("Axelowo");
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
     }
 }

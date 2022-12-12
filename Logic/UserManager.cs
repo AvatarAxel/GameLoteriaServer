@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Logic
@@ -234,6 +235,23 @@ namespace Logic
             return false;
         }
 
+        public List<PlayerDTO> GetFriendListDataBases(string username)
+        {
+            List<PlayerDTO> friendListUsers = new List<PlayerDTO>();
+            if (username != null)
+            {
+                using (var context = new GameLoteriaDataBasesEntities())
+                {
+                    var player = context.player.Where(x => x.username == username).FirstOrDefault();
+                    if (player != null)
+                    {                        
+                        var friendListDataBase = (from a in context.friendList where a.idFriendList == player.email select new PlayerDTO() { Email = a.email }).ToList();
+                        friendListUsers = friendListDataBase;
+                    }
+                }
+            }
+            return friendListUsers;
+        }
 
     }
 }
