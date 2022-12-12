@@ -558,6 +558,20 @@ namespace Comunication
            UserManager userManager = new UserManager();
            return userManager.CheckNumberOfFriends(email);
         }
+        public void JoinFriend(string verificationCode, string username)
+        {
+            var newConnection = OperationContext.Current;
+            var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
+            if (lobby != null)
+            {
+                var player = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == username);
+                if (player != null)
+                {
+                    player.ConnectionFriend = newConnection;
+                }
+            }
+        }
+
         public void SendInvitation(string verificationCode, string usernameSender, string usernameRecipient)
         {
             var lobby = lobbyList.FirstOrDefault(iteration => iteration.VerificationCode == verificationCode);
@@ -567,19 +581,6 @@ namespace Comunication
                 if (player != null)
                 {
                    player.ConnectionFriend.GetCallbackChannel<IFriendListServiceCallBack>().ReciveInvitation(true, usernameSender);
-                }
-            }
-        }
-        public void JoinFriend(string verificationCode, string username)
-        {
-            var newConnection = OperationContext.Current;
-            var lobby = lobbyList.FirstOrDefault(i => i.VerificationCode == verificationCode);
-            if (lobby != null)
-            {
-                var player = lobby.PlayerDTOs.FirstOrDefault(i => i.Username == username);
-                if(player != null)
-                {
-                    player.ConnectionFriend = newConnection;
                 }
             }
         }

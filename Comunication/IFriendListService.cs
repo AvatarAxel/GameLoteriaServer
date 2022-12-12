@@ -8,11 +8,11 @@ namespace Comunication
     {
         [OperationContract]
         int CheckNumberFriends(string email);
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void SendInvitation(string verificationCode, string usernameSender, string usernameRecipient);
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void JoinFriend(string verificationCode, string username);
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void AddFriends(string userEmail, string emailNewFriend, string verificationCode);
     }
 
